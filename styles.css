@@ -60,7 +60,6 @@ body {
   pointer-events: none;
   animation: shake 0.5s infinite alternate;
 }
-
 @keyframes shake {
   0% { transform: translateX(0px); }
   25% { transform: translateX(-5px); }
@@ -112,3 +111,7 @@ body {
   font-size: 30px;
   pointer-events: none;
 }
+
+/* ----------------- CELEBRATION ----------------- */
+#celebration h2 { font-size: 36px; color:#ff4d85; }
+#celebration p { font-size: 20px; }
