@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine 💖</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      text-align: center;
+      padding: 50px;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .buttons {
+      margin-top: 30px;
+      position: relative;
+      height: 150px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #yesBtn:hover {
+      background: #ff1f4c;
+      transform: scale(1.1);
+    }
+
+    #noBtn {
+      background: #ffc2d1;
+      color: #ff4d6d;
+      font-size: 18px;
+      padding: 15px 25px;
+      position: absolute;
+    }
+
+    #message {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      min-height: 40px;
+    }
+
+    .hearts, .confetti, .sparkles, .cats {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart, .confetti-piece, .sparkle, .cat-gif {
+      position: absolute;
+      font-size: 20px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); opacity: 1; }
+      to { transform: translateY(-10vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Camille Anndrea Julgan Lebico, will you be my Valentine? 💘</h1>
+  <div class="card">
+    <p>I promise snacks, memes, and good vibes 😌</p>
+    <div class="buttons">
+      <button id="yesBtn" onclick="sayYes()">YES 💖</button>
+      <button id="noBtn">NO</button>
+    </div>
+    <div id="message"></div>
+  </div>
+
+  <div class="hearts" id="hearts"></div>
+  <div class="confetti" id="confetti"></div>
+  <div class="sparkles" id="sparkles"></div>
+  <div class="cats" id="cats"></div>
+
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.jsdelivr.net/gh/user/music/mata-sa-mata.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+
+    // NO button teleports
+    noBtn.addEventListener('mouseover', () => {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+    function sayYes() {
+      message.innerHTML = "YAYYY!! 💕 Best decision ever 😍 — Love, Josh Daz 💖";
+      spawnHearts();
+      spawnConfetti();
+      spawnSparkles();
+      spawnCats();
+    }
+
+    function spawnHearts() {
+      const container = document.getElementById("hearts");
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        container.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }
+    }
+
+    function spawnConfetti() {
+      const container = document.getElementById("confetti");
+      const colors = ['#ff0', '#f0f', '#0ff', '#fff'];
+      for (let i = 0; i < 50; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti-piece";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.color = colors[Math.floor(Math.random()*colors.length)];
+        c.innerHTML = "🎉";
+        container.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }
+    }
+
+    function spawnSparkles() {
+      const container = document.getElementById("sparkles");
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random() * 100 + "vw";
+        s.innerHTML = "✨";
+        container.appendChild(s);
+        setTimeout(() => s.remove(), 5000);
+      }
+    }
+
+    function spawnCats() {
+      const container = document.getElementById("cats");
+      for (let i = 0; i < 10; i++) {
+        const cat = document.createElement("div");
+        cat.className = "cat-gif";
+        cat.style.left = Math.random() * 100 + "vw";
+        cat.innerHTML = "🐱";
+        container.appendChild(cat);
+        setTimeout(() => cat.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
