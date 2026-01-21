@@ -77,6 +77,20 @@ envelope.addEventListener('click', ()=>{
   setTimeout(()=>{
     document.getElementById('gameContainer').classList.add('hidden');
     mainCard.classList.remove('hidden');
+
+    // Celebration sparkle effect
+    for(let i=0;i<50;i++){
+      const sparkle = document.createElement('div');
+      sparkle.textContent = driftingEmojis[Math.floor(Math.random()*driftingEmojis.length)];
+      sparkle.style.position='fixed';
+      sparkle.style.left = Math.random()*window.innerWidth+'px';
+      sparkle.style.top = Math.random()*window.innerHeight+'px';
+      sparkle.style.fontSize = (Math.random()*30+20)+'px';
+      sparkle.style.transition='all 1s ease';
+      document.body.appendChild(sparkle);
+      setTimeout(()=>sparkle.remove(), 1000);
+    }
+
   }, 600);
 });
 
