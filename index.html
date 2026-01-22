@@ -168,16 +168,16 @@ body {
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" src="https://drive.google.com/uc?export=download&id=1bWFdsle7MNTbc7_62sjPo6h57EqrZjgR" autoplay loop></audio>
-<audio id="heartSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio> <!-- updated pop sound -->
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
-<audio id="noSound" src="https://www.fesliyanstudios.com/play-mp3/4311" preload="auto"></audio>
+<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
 // Floating emojis
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-const totalFloating = 50; 
+const totalFloating = 50;
 for(let i=0;i<totalFloating;i++){
   const e=document.createElement('div');
   e.className='floating-emoji';
@@ -241,7 +241,7 @@ function spawnHeart(){
   heart.addEventListener("click", function popHeart() {
     heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
-    heartSound.currentTime=0; heartSound.play();
+    heartSound.currentTime=0; heartSound.play(); // updated pop sound
 
     setTimeout(() => {
       heartsCollected++;
@@ -325,11 +325,6 @@ if(noBtn){
     }
   });
 }
-
-// Start background music at 12 seconds
-const bgMusic = document.getElementById("bgMusic");
-bgMusic.currentTime = 12;
-bgMusic.play();
 </script>
 </body>
 </html>
