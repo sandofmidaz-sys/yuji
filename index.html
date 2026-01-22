@@ -2,223 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine 💖</title>
+<title>Valentine 💕</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-    * {
-        box-sizing: border-box;
-        font-family: "Comic Sans MS", "Segoe UI", sans-serif;
-    }
-
     body {
         margin: 0;
         height: 100vh;
-        overflow: hidden;
-        background: linear-gradient(135deg, #ffd6e8, #e0c3ff, #ffffff);
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ffd6e8, #e0c3fc);
+        font-family: "Comic Sans MS", "Poppins", cursive;
+        overflow: hidden;
     }
 
-    /* FLOATING EMOJIS */
-    .floating {
-        position: fixed;
-        pointer-events: none;
-        animation: floatUp 12s linear forwards;
-        opacity: 0.6;
-    }
-
-    @keyframes floatUp {
-        from { transform: translateY(100vh) rotate(0deg); }
-        to { transform: translateY(-120vh) rotate(360deg); }
-    }
-
-    /* GAME CARD */
     .card {
-        position: relative;
-        background: rgba(255,255,255,0.9);
-        padding: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px 40px;
         border-radius: 25px;
-        width: 90%;
-        max-width: 420px;
         text-align: center;
         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        max-width: 420px;
+        width: 90%;
+        position: relative;
+    }
+
+    .emoji {
+        font-size: 48px;
+        margin-bottom: 10px;
     }
 
     h1 {
-        margin-top: 0;
-        color: #ff5fa2;
+        font-size: 24px;
+        margin: 10px 0;
+        color: #ff4d88;
     }
 
-    #counter {
-        font-size: 18px;
-        margin-bottom: 15px;
-        color: #444;
+    p {
+        margin: 8px 0;
+        color: #555;
     }
 
-    /* HEARTS */
-    .heart {
-        position: absolute;
-        font-size: 32px;
-        cursor: pointer;
-        animation: bounce 1.5s infinite;
-    }
-
-    @keyframes bounce {
-        0%,100% { transform: scale(1); }
-        50% { transform: scale(1.2); }
-    }
-
-    /* ENVELOPE */
-    #envelope {
-        font-size: 80px;
-        cursor: not-allowed;
-        transition: transform 0.3s;
-        margin: 15px 0;
-    }
-
-    #envelope.unlocked {
-        cursor: pointer;
-        transform: scale(1.1);
-    }
-
-    /* BUTTONS */
     .buttons {
         margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
         position: relative;
-        height: 80px;
+        height: 60px;
     }
 
-    .btn {
-        padding: 12px 24px;
-        border-radius: 20px;
+    button {
+        padding: 12px 22px;
+        font-size: 16px;
+        border-radius: 30px;
         border: none;
-        font-size: 18px;
         cursor: pointer;
-        position: relative;
+        transition: transform 0.2s;
     }
 
     .yes {
-        background: linear-gradient(135deg, #ff5fa2, #a855f7);
+        background: linear-gradient(135deg, #ff6aa2, #b56cff);
         color: white;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 20px rgba(255, 106, 162, 0.5);
     }
 
-    /* NO BUTTON + CAT */
-    #noWrapper {
+    .yes:hover {
+        transform: scale(1.1);
+    }
+
+    .no-wrapper {
         position: absolute;
-        left: 200px;
-        top: 10px;
+        left: 55%;
+        top: 0;
     }
 
     .no {
-        background: #ffd6e8;
+        background: #ffe3ed;
+        color: #ff4d88;
     }
 
-    #cat {
-        position: absolute;
-        top: -28px;
-        left: 0;
-        font-size: 32px;
-        pointer-events: none;
-    }
-
-    #celebrate {
+    .celebration {
         display: none;
         margin-top: 20px;
-        font-size: 22px;
-        color: #ff5fa2;
+    }
+
+    .celebration h2 {
+        color: #ff4d88;
+    }
+
+    .floating {
+        position: fixed;
+        font-size: 32px;
+        opacity: 0.7;
+        pointer-events: none;
+        animation: floatUp 6s linear forwards;
+    }
+
+    @keyframes floatUp {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(-120vh);
+            opacity: 0;
+        }
     }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="gameCard">
-    <h1>💕 Camille Anndrea Julgan Lebico 💕</h1>
+<div class="card">
+    <div class="emoji">💕</div>
 
-    <div id="counter">Collect 20 hearts to unlock the envelope 💌</div>
+    <h1>
+        Camille Anndrea Julgan Lebico, <br>
+        will you be my Valentine? :3
+    </h1>
 
-    <div id="envelope">🔒💌</div>
+    <p>— Josh Daz</p>
+    <p><strong>my treat hehe :3</strong></p>
 
-    <div class="buttons" id="buttons" style="display:none;">
-        <button class="btn yes" id="yesBtn">YES! 💖</button>
+    <div class="buttons">
+        <button class="yes" id="yesBtn">YES! 💖</button>
 
-        <div id="noWrapper">
-            <button class="btn no" id="noBtn">No</button>
-            <div id="cat">🐱</div>
+        <div class="no-wrapper" id="noWrapper">
+            <button class="no" id="noBtn">No</button>
         </div>
     </div>
 
-    <div id="celebrate">
-        YESSS!! 🎉<br>
-        I'm so happy! 💕
+    <div class="celebration" id="celebration">
+        <h2>YESSS!! 🎉</h2>
+        <p>I'm so happy! Let's make it amazing!</p>
     </div>
 </div>
 
 <script>
-/* FLOATING BACKGROUND EMOJIS */
-setInterval(() => {
-    const e = document.createElement("div");
-    e.className = "floating";
-    e.textContent = ["💖","✨","🌸","🐱","🎀","💌"][Math.floor(Math.random()*6)];
-    e.style.left = Math.random()*100 + "vw";
-    e.style.fontSize = 20 + Math.random()*25 + "px";
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),12000);
-}, 700);
+    const noWrapper = document.getElementById("noWrapper");
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const celebration = document.getElementById("celebration");
 
-/* HEART GAME */
-let collected = 0;
-const counter = document.getElementById("counter");
-const envelope = document.getElementById("envelope");
-const buttons = document.getElementById("buttons");
+    noWrapper.style.left = "55%";
+    noWrapper.style.top = "0px";
 
-for(let i=0;i<20;i++){
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.textContent = "💖";
-    h.style.left = Math.random()*80 + 10 + "%";
-    h.style.top = Math.random()*50 + 40 + "%";
-    document.body.appendChild(h);
+    noBtn.addEventListener("mouseenter", () => {
+        const maxX = window.innerWidth - 120;
+        const maxY = window.innerHeight - 120;
 
-    h.onclick = () => {
-        h.remove();
-        collected++;
-        counter.textContent = `Hearts collected: ${collected}/20 💖`;
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
 
-        if(collected === 20){
-            counter.textContent = "Envelope unlocked! Click it 💌";
-            envelope.textContent = "💌";
-            envelope.classList.add("unlocked");
-            envelope.onclick = () => {
-                buttons.style.display = "block";
-            };
-        }
-    };
-}
-
-/* NO BUTTON DODGE + CAT RIDING */
-const noWrapper = document.getElementById("noWrapper");
-document.addEventListener("mousemove", e => {
-    const rect = noWrapper.getBoundingClientRect();
-    const dx = rect.left - e.clientX;
-    const dy = rect.top - e.clientY;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-
-    if(dist < 120){
-        let x = Math.random()*(window.innerWidth - rect.width);
-        let y = Math.random()*(window.innerHeight - rect.height);
         noWrapper.style.left = x + "px";
         noWrapper.style.top = y + "px";
-    }
-});
+    });
 
-/* YES BUTTON */
-document.getElementById("yesBtn").onclick = () => {
-    document.getElementById("celebrate").style.display = "block";
-};
+    yesBtn.addEventListener("click", () => {
+        celebration.style.display = "block";
+        for (let i = 0; i < 30; i++) {
+            spawnEmoji();
+        }
+    });
+
+    function spawnEmoji() {
+        const emojis = ["💖","✨","💕","🌸","🐱","🎀"];
+        const el = document.createElement("div");
+        el.className = "floating";
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * window.innerWidth + "px";
+        el.style.bottom = "-40px";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 6000);
+    }
 </script>
 
 </body>
