@@ -3,84 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Day Surprise</title>
+<title>Valentine's Mini-Game</title>
 <style>
-    /* --- Background --- */
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Comic Sans MS', cursive, sans-serif;
-        background: linear-gradient(135deg, #ffdee9, #b5fffc, #fddde6);
-        overflow: hidden;
-        height: 100vh;
-    }
-    /* --- Floating emojis --- */
-    .floating-emoji {
-        position: fixed;
-        pointer-events: none;
-        user-select: none;
-        transition: transform 0.3s ease;
-    }
-    /* --- Card --- */
-    .card {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 350px;
-        padding: 30px;
-        background: #ffe6f0;
-        border-radius: 25px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        text-align: center;
-    }
-    .card h1 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-    }
-    .card p {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-    }
-    /* --- Buttons --- */
-    .button-container {
-        position: relative;
-        height: 60px;
-    }
-    .button-container button {
-        font-size: 1rem;
-        padding: 10px 25px;
-        border: none;
-        border-radius: 15px;
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        transition: transform 0.2s ease, background 0.3s ease;
-    }
-    #yesBtn {
-        background: linear-gradient(45deg, #ff8ec7, #b57fff);
-        color: white;
-        left: 0;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-    }
-    #yesBtn:hover {
-        transform: scale(1.05);
-    }
-    #noBtn {
-        background: #ffcce0;
-        color: #800040;
-        right: 0;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        position: absolute;
-    }
+body {
+    margin:0; padding:0;
+    font-family:'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #ffdee9, #b5fffc, #fddde6);
+    overflow:hidden;
+    height:100vh;
+}
+
+/* Floating emojis */
+.floating-emoji {
+    position: fixed;
+    pointer-events:none;
+    user-select:none;
+    transition: transform 0.3s ease;
+}
+
+/* Card */
+.card {
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    width:380px; padding:30px;
+    background:#ffe6f0; border-radius:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    text-align:center;
+}
+.card h1 { font-size:1.6rem; margin-bottom:10px; }
+.card p { font-size:1.2rem; margin-bottom:20px; }
+
+/* Buttons */
+.button-container {
+    position:relative; height:60px;
+}
+.button-container button {
+    font-size:1rem;
+    padding:10px 25px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    position:absolute;
+    top:0;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+#yesBtn {
+    background: linear-gradient(45deg,#ff8ec7,#b57fff);
+    color:white; left:0;
+    box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+#noBtn {
+    background:#ffcce0; color:#800040; right:0;
+    position:absolute;
+    box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+/* Mini-game hearts */
+.heart {
+    position:absolute;
+    font-size:28px;
+    cursor:pointer;
+    user-select:none;
+    transition: transform 0.2s ease;
+}
+
+/* Envelope */
+#envelope {
+    font-size:80px;
+    cursor:pointer;
+    transition: transform 0.5s ease;
+}
+#envelope.open { transform: rotateX(180deg); }
+
+/* Floating hearts/emoji container */
+#floating { position:fixed; width:100%; height:100%; top:0; left:0; pointer-events:none; }
 </style>
 </head>
 <body>
 
 <div id="floating"></div>
 
-<div class="card">
-    <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
+<div class="card" id="card">
+    <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3 -Josh Daz</h1>
     <p>my treat hehe :3</p>
     <div class="button-container">
         <button id="yesBtn">YES! 💖</button>
@@ -88,86 +93,120 @@
     </div>
 </div>
 
+<!-- Mini-game container -->
+<div class="card" id="gameCard" style="display:none;">
+    <h1>Collect 10 hearts to unlock your envelope!</h1>
+</div>
+
+<!-- Envelope container -->
+<div class="card" id="envelopeCard" style="display:none;">
+    <div id="envelope">💌</div>
+    <p>Click to open your Valentine!</p>
+</div>
+
 <script>
-/* --- Floating emojis --- */
+// --- Floating emojis ---
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-
 function spawnFloating() {
-    const count = Math.floor(Math.random() * 3) + 2; // 2-4 at a time
+    const count = Math.floor(Math.random()*3)+2;
     for(let i=0;i<count;i++){
         const e = document.createElement('div');
-        e.className = 'floating-emoji';
+        e.className='floating-emoji';
         e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-        e.style.left = Math.random()*window.innerWidth+'px';
-        e.style.top = Math.random()*window.innerHeight+'px';
-        e.style.fontSize = (Math.random()*20 + 20) + 'px';
+        e.style.left=Math.random()*window.innerWidth+'px';
+        e.style.top=Math.random()*window.innerHeight+'px';
+        e.style.fontSize=(Math.random()*20+20)+'px';
         floating.appendChild(e);
-        // Animate drifting
-        let sway = (Math.random()*2 - 1);
-        let posY = parseFloat(e.style.top);
+        let sway=(Math.random()*2-1), posY=parseFloat(e.style.top);
         function drift(){
             posY -= 0.3;
-            e.style.top = posY+'px';
-            e.style.left = parseFloat(e.style.left) + sway + 'px';
-            sway += (Math.random()*0.2-0.1);
-            if(posY < -50) e.remove();
+            e.style.top=posY+'px';
+            e.style.left=parseFloat(e.style.left)+sway+'px';
+            sway+=(Math.random()*0.2-0.1);
+            if(posY<-50) e.remove();
             else requestAnimationFrame(drift);
         }
         drift();
     }
 }
-setInterval(spawnFloating, 400);
+setInterval(spawnFloating,400);
 
-/* --- NO button with cat rider and dodge --- */
+// --- NO button with cat ---
 const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
 const btnContainer = document.querySelector(".button-container");
-const dodgeDistance = 180;
+const dodgeDistance = 250; // bigger jump
 
-// Create cat emoji riding
 const cat = document.createElement("span");
 cat.textContent = "🐱";
-cat.style.position = "absolute";
-cat.style.fontSize = "24px";
-cat.style.top = "-28px";
-cat.style.left = "50%";
-cat.style.transform = "translateX(-50%)";
-noBtn.style.position = "relative";
+cat.style.position="absolute";
+cat.style.fontSize="24px";
+cat.style.top="-28px";
+cat.style.left="50%";
+cat.style.transform="translateX(-50%)";
+noBtn.style.position="relative";
 noBtn.appendChild(cat);
 
-// Bouncing cat animation
-let direction = 1;
+// Cat bouncing
+let direction=1;
 setInterval(()=>{
-    const top = parseFloat(cat.style.top.replace("px",""));
-    if(top > -20 || top < -30) direction *= -1;
-    cat.style.top = (top + direction*1.2) + "px";
-}, 100);
+    const top=parseFloat(cat.style.top.replace("px",""));
+    if(top>-20||top<-30) direction*=-1;
+    cat.style.top=(top+direction*1.2)+"px";
+},100);
 
-noBtn.addEventListener("mousemove", (e)=>{
-    const rect = noBtn.getBoundingClientRect();
-    const cursorX = e.clientX;
-    const cursorY = e.clientY;
-    const btnCenterX = rect.left + rect.width/2;
-    const btnCenterY = rect.top + rect.height/2;
-    const dx = btnCenterX - cursorX;
-    const dy = btnCenterY - cursorY;
-    const distance = Math.sqrt(dx*dx + dy*dy);
-    if(distance < 100){
-        let newX = rect.left + (dx/distance)*dodgeDistance;
-        let newY = rect.top + (dy/distance)*dodgeDistance;
-        const containerRect = btnContainer.getBoundingClientRect();
-        newX = Math.max(0, Math.min(containerRect.width - rect.width, newX - containerRect.left));
-        newY = Math.max(0, Math.min(containerRect.height - rect.height, newY - containerRect.top));
-        noBtn.style.left = newX + "px";
-        noBtn.style.top = newY + "px";
+noBtn.addEventListener("mousemove",(e)=>{
+    const rect=noBtn.getBoundingClientRect();
+    const cursorX=e.clientX, cursorY=e.clientY;
+    const btnCenterX=rect.left+rect.width/2;
+    const btnCenterY=rect.top+rect.height/2;
+    const dx=btnCenterX-cursorX;
+    const dy=btnCenterY-cursorY;
+    const distance=Math.sqrt(dx*dx+dy*dy);
+    if(distance<100){
+        let newX=rect.left+(dx/distance)*dodgeDistance;
+        let newY=rect.top+(dy/distance)*dodgeDistance;
+        const containerRect=btnContainer.getBoundingClientRect();
+        newX=Math.max(0,Math.min(containerRect.width-rect.width,newX-containerRect.left));
+        newY=Math.max(0,Math.min(containerRect.height-rect.height,newY-containerRect.top));
+        noBtn.style.left=newX+"px";
+        noBtn.style.top=newY+"px";
     }
 });
 
-/* --- YES button --- */
-yesBtn.addEventListener("click", ()=>{
-    alert("YAY! 💖 I'm so happy! -Josh Daz");
+// --- YES button ---
+const yesBtn=document.getElementById("yesBtn");
+yesBtn.addEventListener("click",()=>{
+    document.getElementById("card").style.display="none";
+    document.getElementById("gameCard").style.display="block";
+    startMiniGame();
 });
+
+// --- Mini-game ---
+function startMiniGame(){
+    const gameCard=document.getElementById("gameCard");
+    let heartsCollected=0;
+    const heartElements=[];
+    function spawnHeart(){
+        const heart=document.createElement("div");
+        heart.className="heart";
+        heart.textContent="💖";
+        heart.style.left=Math.random()*(window.innerWidth-50)+"px";
+        heart.style.top=Math.random()*(window.innerHeight-50)+"px";
+        gameCard.appendChild(heart);
+        heartElements.push(heart);
+        heart.addEventListener("click",()=>{
+            heartsCollected++;
+            heart.remove();
+            if(heartsCollected>=10){
+                // show envelope
+                gameCard.style.display="none";
+                document.getElementById("envelopeCard").style.display="block";
+            }
+        });
+    }
+    for(let i=0;i<10;i++) spawnHeart();
+}
 </script>
 </body>
 </html>
