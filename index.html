@@ -2,307 +2,223 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Valentine 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine Adventure</title>
+
 <style>
-/* ----------------- BODY / BACKGROUND ----------------- */
-body {
-  margin: 0;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: linear-gradient(135deg, #ffeef2, #fce5f0, #fff0f5);
-  overflow: hidden;
-  text-align: center;
-  height: 100vh;
-}
+    * {
+        box-sizing: border-box;
+        font-family: "Comic Sans MS", "Segoe UI", sans-serif;
+    }
 
-/* ----------------- FLOATING EMOJIS ----------------- */
-#floating-emojis div {
-  position: fixed;
-  font-size: 24px;
-  pointer-events: none;
-  transition: transform 0.05s linear;
-}
+    body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(135deg, #ffd6e8, #e0c3ff, #ffffff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-/* ----------------- MINI-GAME HEARTS ----------------- */
-.heart-float {
-  position: absolute;
-  font-size: 50px;
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.2s;
-}
-.heart-float:hover { transform: scale(1.3); }
+    /* FLOATING EMOJIS */
+    .floating {
+        position: fixed;
+        pointer-events: none;
+        animation: floatUp 12s linear forwards;
+        opacity: 0.6;
+    }
 
-/* ----------------- HEART COUNTER ----------------- */
-#heartCounter { font-size: 20px; color: #ff1f5c; margin-bottom: 10px; }
+    @keyframes floatUp {
+        from { transform: translateY(100vh) rotate(0deg); }
+        to { transform: translateY(-120vh) rotate(360deg); }
+    }
 
-/* ----------------- ENVELOPE ----------------- */
-#envelopeContainer {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  width: 120px;
-  height: 120px;
-  cursor: default;
-}
+    /* GAME CARD */
+    .card {
+        position: relative;
+        background: rgba(255,255,255,0.9);
+        padding: 30px;
+        border-radius: 25px;
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
 
-#envelopeWrapper { position: relative; display: inline-block; }
-#envelope { font-size: 100px; cursor: pointer; transition: transform 0.5s ease, box-shadow 0.3s; }
-#envelope:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(255,0,128,0.3); }
-#envelope.open { transform: rotateX(180deg); }
+    h1 {
+        margin-top: 0;
+        color: #ff5fa2;
+    }
 
-#chains {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 60px;
-  color: #555;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  animation: shake 0.5s infinite alternate;
-}
-@keyframes shake {
-  0% { transform: translateX(0px); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0px); }
-}
+    #counter {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #444;
+    }
 
-/* ----------------- MAIN CARD ----------------- */
-.card {
-  background: linear-gradient(135deg,#ffd0e1,#ffe0f5,#ffeefc);
-  padding: 40px 30px;
-  border-radius: 25px;
-  max-width: 450px;
-  margin: 50px auto;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-.emoji-display { font-size: 40px; margin-bottom: 15px; }
+    /* HEARTS */
+    .heart {
+        position: absolute;
+        font-size: 32px;
+        cursor: pointer;
+        animation: bounce 1.5s infinite;
+    }
 
-/* ----------------- BUTTONS ----------------- */
-.button-container { position: relative; margin-top: 20px; }
+    @keyframes bounce {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
 
-.button {
-  padding: 15px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  border: none;
-  font-weight: bold;
-  font-size: 18px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  position: relative;
-}
+    /* ENVELOPE */
+    #envelope {
+        font-size: 80px;
+        cursor: not-allowed;
+        transition: transform 0.3s;
+        margin: 15px 0;
+    }
 
-.yes-button { 
-  background: linear-gradient(135deg, #ff4d85, #a832c6);
-  color: white;
-}
+    #envelope.unlocked {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 
-.no-button { 
-  background: #ffb3c9; 
-  color: #ff1f5c;
-  position: fixed;
-}
+    /* BUTTONS */
+    .buttons {
+        margin-top: 20px;
+        position: relative;
+        height: 80px;
+    }
 
-#catRider {
-  position: absolute;
-  top: -25px;
-  left: 0;
-  font-size: 30px;
-  pointer-events: none;
-}
+    .btn {
+        padding: 12px 24px;
+        border-radius: 20px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        position: relative;
+    }
 
-/* ----------------- CELEBRATION ----------------- */
-#celebration h2 { font-size: 36px; color:#ff4d85; }
-#celebration p { font-size: 20px; }
+    .yes {
+        background: linear-gradient(135deg, #ff5fa2, #a855f7);
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
 
-/* ----------------- HIDDEN ----------------- */
-.hidden { display: none; }
+    /* NO BUTTON + CAT */
+    #noWrapper {
+        position: absolute;
+        left: 200px;
+        top: 10px;
+    }
+
+    .no {
+        background: #ffd6e8;
+    }
+
+    #cat {
+        position: absolute;
+        top: -28px;
+        left: 0;
+        font-size: 32px;
+        pointer-events: none;
+    }
+
+    #celebrate {
+        display: none;
+        margin-top: 20px;
+        font-size: 22px;
+        color: #ff5fa2;
+    }
 </style>
 </head>
+
 <body>
 
-<!-- Floating drifting emojis container -->
-<div id="floating-emojis"></div>
+<div class="card" id="gameCard">
+    <h1>💕 Camille Anndrea Julgan Lebico 💕</h1>
 
-<!-- Mini-game container -->
-<div id="gameContainer">
-  <h2>Collect 20 hearts to unlock your Valentine! 💖</h2>
-  <p id="heartCounter">Hearts collected: 0 / 20</p>
-  <div id="heartsContainer"></div>
+    <div id="counter">Collect 20 hearts to unlock the envelope 💌</div>
 
-  <!-- Locked envelope -->
-  <div id="envelopeContainer" class="locked">
-    <div id="envelopeWrapper">
-      <div id="envelope">💌</div>
-      <div id="chains">⛓️🔒⛓️</div>
+    <div id="envelope">🔒💌</div>
+
+    <div class="buttons" id="buttons" style="display:none;">
+        <button class="btn yes" id="yesBtn">YES! 💖</button>
+
+        <div id="noWrapper">
+            <button class="btn no" id="noBtn">No</button>
+            <div id="cat">🐱</div>
+        </div>
     </div>
-    <p>Collect all hearts first!</p>
-  </div>
-</div>
 
-<!-- Main Valentine card -->
-<div id="mainCard" class="hidden">
-  <div class="card">
-    <div class="emoji-display">💕</div>
-    <h1>Camille Anndrea Julgan Lebico, will you be my Valentine? :3 -Josh Daz</h1>
-    <p>my treat hehe :3</p>
-    <div class="button-container">
-      <button id="yesButton" class="button yes-button">YES! 💖</button>
-      <button id="noButton" class="button no-button">No</button>
-      <div id="catRider">🐱</div>
+    <div id="celebrate">
+        YESSS!! 🎉<br>
+        I'm so happy! 💕
     </div>
-  </div>
-  <div id="celebration" class="hidden">
-    <h2>YESSS!! 🎉</h2>
-    <p>I'm so happy! Let's make it amazing!</p>
-  </div>
 </div>
 
 <script>
-// ----------------- ELEMENTS -----------------
-const heartsContainer = document.getElementById("heartsContainer");
-const envelopeContainer = document.getElementById("envelopeContainer");
+/* FLOATING BACKGROUND EMOJIS */
+setInterval(() => {
+    const e = document.createElement("div");
+    e.className = "floating";
+    e.textContent = ["💖","✨","🌸","🐱","🎀","💌"][Math.floor(Math.random()*6)];
+    e.style.left = Math.random()*100 + "vw";
+    e.style.fontSize = 20 + Math.random()*25 + "px";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),12000);
+}, 700);
+
+/* HEART GAME */
+let collected = 0;
+const counter = document.getElementById("counter");
 const envelope = document.getElementById("envelope");
-const chains = document.getElementById("chains");
-const mainCard = document.getElementById("mainCard");
-const yesButton = document.getElementById("yesButton");
-const noButton = document.getElementById("noButton");
-const catRider = document.getElementById("catRider");
-const celebration = document.getElementById("celebration");
-const floatingContainer = document.getElementById("floating-emojis");
+const buttons = document.getElementById("buttons");
 
-let heartsCollected = 0;
-const totalHearts = 20;
+for(let i=0;i<20;i++){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = "💖";
+    h.style.left = Math.random()*80 + 10 + "%";
+    h.style.top = Math.random()*50 + 40 + "%";
+    document.body.appendChild(h);
 
-// ----------------- DRIFTING EMOJIS -----------------
-const driftingEmojis = ['💖','✨','🌸','💌','🐱','🎀','🍬'];
-function spawnDriftingEmoji() {
-  const el = document.createElement('div');
-  el.textContent = driftingEmojis[Math.floor(Math.random()*driftingEmojis.length)];
-  el.style.left = Math.random()*window.innerWidth+'px';
-  el.style.top = Math.random()*window.innerHeight+'px';
-  el.style.fontSize = (Math.random()*24+20)+'px';
-  el.style.opacity = Math.random()*0.8+0.2;
-  floatingContainer.appendChild(el);
+    h.onclick = () => {
+        h.remove();
+        collected++;
+        counter.textContent = `Hearts collected: ${collected}/20 💖`;
 
-  let posY = parseFloat(el.style.top);
-  let sway = Math.random()*2-1;
-  let swayDirection = Math.random()<0.5?-1:1;
-
-  function drift(){
-    posY -= 0.5;
-    let posX = parseFloat(el.style.left)+sway*swayDirection;
-    el.style.top = posY+'px';
-    el.style.left = posX+'px';
-    sway += Math.random()*0.2-0.1;
-    if(posY<-50) el.remove();
-    else requestAnimationFrame(drift);
-  }
-  drift();
+        if(collected === 20){
+            counter.textContent = "Envelope unlocked! Click it 💌";
+            envelope.textContent = "💌";
+            envelope.classList.add("unlocked");
+            envelope.onclick = () => {
+                buttons.style.display = "block";
+            };
+        }
+    };
 }
-setInterval(spawnDriftingEmoji, 500);
 
-// ----------------- HEART MINI-GAME -----------------
-function spawnHearts(){
-  for(let i=0;i<totalHearts;i++){
-    const heart = document.createElement('div');
-    heart.className = 'heart-float';
-    heart.textContent = '💖';
-    heart.style.left = Math.random()*(window.innerWidth-50)+'px';
-    heart.style.top = Math.random()*(window.innerHeight/2)+'px';
-    heartsContainer.appendChild(heart);
+/* NO BUTTON DODGE + CAT RIDING */
+const noWrapper = document.getElementById("noWrapper");
+document.addEventListener("mousemove", e => {
+    const rect = noWrapper.getBoundingClientRect();
+    const dx = rect.left - e.clientX;
+    const dy = rect.top - e.clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
 
-    heart.addEventListener('click', ()=>{
-      heart.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      heart.style.transform = 'scale(2)';
-      heart.style.opacity = '0';
-      setTimeout(()=>heart.remove(), 300);
-
-      heartsCollected++;
-      document.getElementById('heartCounter').textContent = `Hearts collected: ${heartsCollected} / ${totalHearts}`;
-      if(heartsCollected>=totalHearts){
-        envelopeContainer.classList.remove('locked');
-        chains.remove();
-        envelopeContainer.querySelector('p').textContent = "Click the envelope to open your Valentine!";
-      }
-    });
-  }
-}
-spawnHearts();
-
-// ----------------- ENVELOPE OPEN -----------------
-envelope.addEventListener('click', ()=>{
-  if(envelopeContainer.classList.contains('locked')) return;
-  envelope.classList.add('open');
-  setTimeout(()=>{
-    document.getElementById('gameContainer').classList.add('hidden');
-    mainCard.classList.remove('hidden');
-
-    // Celebration sparkle effect
-    for(let i=0;i<50;i++){
-      const sparkle = document.createElement('div');
-      sparkle.textContent = driftingEmojis[Math.floor(Math.random()*driftingEmojis.length)];
-      sparkle.style.position='fixed';
-      sparkle.style.left = Math.random()*window.innerWidth+'px';
-      sparkle.style.top = Math.random()*window.innerHeight+'px';
-      sparkle.style.fontSize = (Math.random()*30+20)+'px';
-      sparkle.style.transition='all 1s ease';
-      document.body.appendChild(sparkle);
-      setTimeout(()=>sparkle.remove(), 1000);
+    if(dist < 120){
+        let x = Math.random()*(window.innerWidth - rect.width);
+        let y = Math.random()*(window.innerHeight - rect.height);
+        noWrapper.style.left = x + "px";
+        noWrapper.style.top = y + "px";
     }
-
-  }, 600);
 });
 
-// ----------------- NO BUTTON DODGE & CAT RIDER -----------------
-const dodgeDistance = 150;
-noButton.style.left = "50px";
-noButton.style.top = "300px";
-
-noButton.addEventListener('mousemove',(e)=>{
-  const rect = noButton.getBoundingClientRect();
-  const cursorX = e.clientX;
-  const cursorY = e.clientY;
-
-  const btnCenterX = rect.left + rect.width/2;
-  const btnCenterY = rect.top + rect.height/2;
-
-  const dx = btnCenterX - cursorX;
-  const dy = btnCenterY - cursorY;
-  const distance = Math.sqrt(dx*dx+dy*dy);
-
-  if(distance<100){
-    let newX = rect.left + dx/distance*dodgeDistance;
-    let newY = rect.top + dy/distance*dodgeDistance;
-
-    newX = Math.max(10, Math.min(window.innerWidth - rect.width - 10, newX));
-    newY = Math.max(10, Math.min(window.innerHeight - rect.height - 10, newY));
-
-    noButton.style.left = newX+'px';
-    noButton.style.top = newY+'px';
-
-    // Move cat with button
-    catRider.style.left = noButton.offsetLeft+'px';
-    catRider.style.top = (noButton.offsetTop-25)+'px';
-  }
-});
-
-// Initially position cat on NO button
-catRider.style.left = noButton.offsetLeft+'px';
-catRider.style.top = (noButton.offsetTop-25)+'px';
-
-// ----------------- YES BUTTON CELEBRATION -----------------
-yesButton.addEventListener('click', ()=>{
-  celebration.classList.remove('hidden');
-});
+/* YES BUTTON */
+document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("celebrate").style.display = "block";
+};
 </script>
 
 </body>
