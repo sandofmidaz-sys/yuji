@@ -251,12 +251,28 @@ cat.textContent="🐱";
 noBtn.appendChild(cat);
 
 document.addEventListener("mousemove",(e)=>{
-  const r=noBtn.getBoundingClientRect();
-  if(Math.hypot(r.x-e.clientX,r.y-e.clientY)<250){
-    noBtn.style.left=Math.random()*(valentineCard.offsetWidth-r.width)+"px";
-    noBtn.style.top=Math.random()*(valentineCard.offsetHeight-r.height-40)+40+"px";
+  const r = noBtn.getBoundingClientRect();
+  const card = valentineCard.getBoundingClientRect();
+
+  const distance = Math.hypot(
+    (r.left + r.width / 2) - e.clientX,
+    (r.top + r.height / 2) - e.clientY
+  );
+
+  if (distance < 250) {
+    const padding = 20;
+
+    const maxX = card.width - r.width - padding;
+    const maxY = card.height - r.height - padding;
+
+    const newX = Math.random() * maxX + padding;
+    const newY = Math.random() * maxY + padding;
+
+    noBtn.style.left = newX + "px";
+    noBtn.style.top  = newY + "px";
   }
 });
+
 </script>
 </body>
 </html>
