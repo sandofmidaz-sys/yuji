@@ -27,7 +27,7 @@ body {
   position:absolute;
   top:50%; left:50%;
   transform: translate(-50%,-50%);
-  width:400px; padding:30px;
+  width:450px; padding:30px;
   background:#ffe6f0; border-radius:25px;
   box-shadow:0 10px 25px rgba(0,0,0,0.15);
   text-align:center;
@@ -112,10 +112,10 @@ body {
 </div>
 
 <script>
-// --- Floating emojis (spawn all at once) ---
+// --- Floating emojis (spawn all at once, doubled) ---
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-const totalFloating = 25;
+const totalFloating = 50; // doubled
 for(let i=0;i<totalFloating;i++){
   const e = document.createElement('div');
   e.className='floating-emoji';
@@ -172,7 +172,7 @@ for(let i=0;i<totalHearts;i++) spawnHeart();
 // --- NO button with cat ---
 const noBtn = document.getElementById("noBtn");
 const btnContainer = document.querySelector(".button-container");
-const dodgeDistance = 300;
+const dodgeDistance = 350;
 
 if(noBtn){
   const cat = document.createElement("span");
@@ -217,8 +217,7 @@ if(noBtn){
 const yesBtn=document.getElementById("yesBtn");
 if(yesBtn){
   yesBtn.addEventListener("click",()=>{
-    valentineCard.style.display="none";
-    alert("Yay! Enjoy your Valentine's day! 💖");
+    valentineCard.style.display="block";
   });
 }
 
