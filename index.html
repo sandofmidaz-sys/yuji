@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Valentine 💕</title>
+
 <style>
 html,body{
   margin:0;
@@ -19,110 +20,170 @@ html,body{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  text-align:center;
-  background:rgba(255,255,255,0.85);
-  padding:30px 40px;
+  width:360px;
+  background:rgba(255,255,255,0.9);
+  padding:25px;
   border-radius:25px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+  box-shadow:0 20px 40px rgba(0,0,0,0.25);
+  text-align:center;
 }
 
-h1{margin:10px 0;font-size:28px;}
-p{margin:10px 0;font-size:18px;}
+.hidden{display:none;}
 
+h1{font-size:22px;margin:10px 0;}
+p{margin:8px 0;font-size:16px;}
+
+.counter{
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.heart{
+  position:absolute;
+  font-size:30px;
+  cursor:pointer;
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+  100%{transform:translateY(0);}
+}
+
+/* Envelope */
+.envelope{
+  font-size:80px;
+  cursor:pointer;
+  transition:transform .3s;
+}
+.envelope:hover{transform:scale(1.1);}
+
+/* Buttons */
 .buttons{
-  margin-top:25px;
+  position:relative;
+  height:80px;
+  margin-top:15px;
 }
 
 button{
-  font-size:20px;
-  padding:12px 26px;
+  padding:12px 22px;
   border:none;
-  border-radius:30px;
+  border-radius:25px;
+  font-size:18px;
   cursor:pointer;
-  position:relative;
+  position:absolute;
 }
 
 #yes{
+  left:10px;
   background:linear-gradient(135deg,#ff5fa2,#b46bff);
   color:white;
-  box-shadow:0 10px 20px rgba(0,0,0,0.2);
 }
 
 #no{
+  right:10px;
   background:#ffe6f2;
-  margin-left:20px;
-  position:absolute;
 }
 
 .cat{
   position:absolute;
-  top:-25px;
+  top:-22px;
   left:50%;
   transform:translateX(-50%);
-  font-size:28px;
+  font-size:26px;
   pointer-events:none;
-}
-
-.heart{
-  position:fixed;
-  font-size:28px;
-  animation:float 8s linear infinite;
-  opacity:0.6;
-}
-
-@keyframes float{
-  from{transform:translateY(100vh);}
-  to{transform:translateY(-100px);}
 }
 </style>
 </head>
+
 <body>
 
-<div class="center">
-  <div style="font-size:40px;">💕</div>
-  <h1>Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
+<!-- MINI GAME -->
+<div class="center" id="game">
+  <h1>Collect the hearts 💕</h1>
+  <p class="counter">Hearts: <span id="count">0</span>/10</p>
+</div>
+
+<!-- ENVELOPE -->
+<div class="center hidden" id="envelopeScreen">
+  <p>Click to open 💌</p>
+  <div class="envelope" id="envelope">💌</div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="center hidden" id="card">
+  <div style="font-size:36px;">💕</div>
+  <h1>Camille Anndrea Julgan Lebico,<br>will you be my Valentine? :3</h1>
   <p>— Josh Daz</p>
   <p><b>my treat hehe :3</b></p>
 
-  <div class="buttons">
+  <div class="buttons" id="buttonBox">
     <button id="yes">YES! 💖</button>
     <button id="no">
       No
       <div class="cat">🐱</div>
     </button>
   </div>
+
+  <div id="result" class="hidden">
+    <h1>YESSS!! 🎉</h1>
+    <p>I'm so happy! Let's make it amazing 💖</p>
+  </div>
 </div>
 
 <script>
-const noBtn=document.getElementById("no");
+/* MINI GAME */
+let collected=0;
+const game=document.getElementById("game");
+const countEl=document.getElementById("count");
 
-function moveNo(){
-  const w=window.innerWidth-120;
-  const h=window.innerHeight-60;
-  noBtn.style.left=Math.random()*w+"px";
-  noBtn.style.top=Math.random()*h+"px";
-}
-moveNo();
-
-document.addEventListener("mousemove",e=>{
-  const r=noBtn.getBoundingClientRect();
-  const dx=e.clientX-(r.left+r.width/2);
-  const dy=e.clientY-(r.top+r.height/2);
-  if(Math.hypot(dx,dy)<120) moveNo();
-});
-
-document.getElementById("yes").onclick=()=>{
-  alert("YESSS!! 🎉 I'm so happy! 💕");
-};
-
-for(let i=0;i<25;i++){
+for(let i=0;i<10;i++){
   const h=document.createElement("div");
   h.className="heart";
-  h.textContent=["💖","✨","🎀","🐱","💌"][Math.floor(Math.random()*5)];
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=6+Math.random()*6+"s";
-  document.body.appendChild(h);
+  h.textContent="💖";
+  h.style.left=Math.random()*280+"px";
+  h.style.top=Math.random()*200+"px";
+  h.onclick=()=>{
+    h.remove();
+    collected++;
+    countEl.textContent=collected;
+    if(collected===10){
+      game.classList.add("hidden");
+      document.getElementById("envelopeScreen").classList.remove("hidden");
+    }
+  };
+  game.appendChild(h);
 }
+
+/* ENVELOPE */
+document.getElementById("envelope").onclick=()=>{
+  document.getElementById("envelopeScreen").classList.add("hidden");
+  document.getElementById("card").classList.remove("hidden");
+};
+
+/* NO BUTTON SAFE DODGE */
+const noBtn=document.getElementById("no");
+const box=document.getElementById("buttonBox");
+
+box.addEventListener("mousemove",e=>{
+  const r=noBtn.getBoundingClientRect();
+  const b=box.getBoundingClientRect();
+  const dx=e.clientX-(r.left+r.width/2);
+  const dy=e.clientY-(r.top+r.height/2);
+
+  if(Math.hypot(dx,dy)<80){
+    let x=Math.random()*(b.width-r.width);
+    let y=Math.random()*(b.height-r.height);
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
+  }
+});
+
+/* YES BUTTON */
+document.getElementById("yes").onclick=()=>{
+  document.getElementById("result").classList.remove("hidden");
+};
 </script>
 
 </body>
