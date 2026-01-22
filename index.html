@@ -168,30 +168,13 @@ body {
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" loop muted autoplay>
-  <source src="https://jumpshare.com/s/tqlomfy7TnyvvQEr9VKP-" type="audio/mpeg">
-</audio>
-<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio> <!-- updated pop sound -->
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
-// --- BGM ONLY ---
-const bgMusic = document.getElementById("bgMusic");
-
-// Start at 00:12 when metadata loads
-bgMusic.addEventListener("loadedmetadata", () => {
-  bgMusic.currentTime = 12;
-});
-
-// Unmute on first user interaction (required by browsers)
-function unmuteBGM() {
-  bgMusic.muted = false;
-  document.removeEventListener("click", unmuteBGM);
-}
-document.addEventListener("click", unmuteBGM);
-
-/* Floating emojis */
+// Floating emojis
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
 const totalFloating = 50;
@@ -220,7 +203,7 @@ for(let i=0;i<totalFloating;i++){
   drift();
 }
 
-// Mini-game logic continues unchanged
+// Mini-game
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
@@ -258,7 +241,7 @@ function spawnHeart(){
   heart.addEventListener("click", function popHeart() {
     heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
-    heartSound.currentTime=0; heartSound.play();
+    heartSound.currentTime=0; heartSound.play(); // updated pop sound
 
     setTimeout(() => {
       heartsCollected++;
