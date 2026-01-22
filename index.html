@@ -1,179 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Valentine 💕</title>
-
+<meta charset="UTF-8" />
+<title>Valentine 💖</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: "Comic Sans MS", cursive;
-  background: linear-gradient(135deg, #ffd1e8, #e6ccff, #ffffff);
-  overflow: hidden;
-}
+  * {
+    box-sizing: border-box;
+    font-family: "Comic Sans MS", "Poppins", sans-serif;
+  }
 
-/* CARD */
-.card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 380px;
-  padding: 25px;
-  background: rgba(255,255,255,0.92);
-  border-radius: 28px;
-  box-shadow: 0 25px 45px rgba(0,0,0,0.25);
-  text-align: center;
-}
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffd6e8, #e0c3ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 
-h1 {
-  font-size: 22px;
-  margin: 10px 0;
-}
+  .card {
+    width: 420px;
+    min-height: 520px;
+    background: #fff0f7;
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    position: relative;
+  }
 
-p {
-  font-size: 16px;
-  margin: 6px 0;
-}
+  h1 {
+    margin-top: 10px;
+    color: #d63384;
+  }
 
-/* BUTTON PLAYGROUND */
-.buttons {
-  position: relative;
-  width: 100%;
-  height: 180px; /* BIG playground */
-  margin-top: 25px;
-  border-radius: 22px;
-}
+  .instruction {
+    margin: 10px 0 15px;
+    color: #7a2e4a;
+    font-weight: bold;
+  }
 
-/* BUTTONS */
-button {
-  position: absolute;
-  padding: 10px 18px;
-  font-size: 16px;
-  border: none;
-  border-radius: 22px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
+  /* HEART MINI GAME */
+  .game-area {
+    position: relative;
+    height: 220px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.5);
+    overflow: hidden;
+  }
 
-#yes {
-  left: 20px;
-  top: 65px;
-  background: linear-gradient(135deg, #ff5fa2, #b46bff);
-  color: white;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-}
+  .heart {
+    position: absolute;
+    font-size: 28px;
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite;
+  }
 
-#no {
-  right: 20px;
-  top: 65px;
-  background: #ffe6f2;
-}
+  @keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
 
-/* CAT RIDER */
-.cat {
-  position: absolute;
-  top: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 26px;
-  pointer-events: none;
-}
+  .counter {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #b83280;
+  }
 
-/* RESULT */
-#result {
-  margin-top: 20px;
-  display: none;
-}
+  /* ENVELOPE */
+  .envelope {
+    font-size: 90px;
+    cursor: not-allowed;
+    opacity: 0.4;
+    transition: 0.3s;
+  }
 
-/* FLOATING EMOJIS */
-.float {
-  position: fixed;
-  font-size: 28px;
-  opacity: 0.6;
-  animation: floatUp 8s linear infinite;
-}
+  .envelope.unlocked {
+    cursor: pointer;
+    opacity: 1;
+    transform: scale(1.05);
+  }
 
-@keyframes floatUp {
-  from { transform: translateY(110vh); }
-  to { transform: translateY(-120px); }
-}
+  /* QUESTION */
+  .question {
+    display: none;
+    margin-top: 15px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 15px;
+    position: relative;
+    height: 60px;
+  }
+
+  button {
+    width: 120px;
+    height: 45px;
+    border-radius: 24px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+
+  .yes {
+    background: linear-gradient(135deg, #ff5fa2, #b86bff);
+    color: white;
+  }
+
+  .no {
+    background: #ffe3ef;
+    color: #a83c6a;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .result {
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #b83280;
+  }
 </style>
 </head>
-
 <body>
 
 <div class="card">
-  <div style="font-size:38px;">💕</div>
+  <h1>💌 Valentine Mission 💌</h1>
 
-  <h1>
-    Camille Anndrea Julgan Lebico,<br>
-    will you be my Valentine? :3
-  </h1>
+  <div class="instruction">Collect 10 hearts to unlock the envelope</div>
+  <div class="counter">Hearts collected: <span id="count">0</span>/10</div>
 
-  <p>— Josh Daz</p>
-  <p><b>my treat hehe :3</b></p>
+  <div class="game-area" id="gameArea"></div>
 
-  <div class="buttons" id="box">
-    <button id="yes">YES! 💖</button>
+  <div class="envelope" id="envelope">💌</div>
 
-    <button id="no">
-      No
-      <div class="cat">🐱</div>
-    </button>
+  <div class="question" id="question">
+    <p>
+      💕 Camille Anndrea Julgan Lebico,<br>
+      will you be my Valentine? :3<br>
+      <small>— Josh Daz</small>
+    </p>
+
+    <div class="buttons" id="buttonBox">
+      <button class="yes" id="yesBtn">YES 💖</button>
+      <button class="no" id="noBtn">NO 🙃</button>
+    </div>
   </div>
 
-  <div id="result">
-    <h1>YESSS!! 🎉</h1>
-    <p>I'm so happy! Let's make it amazing 💖</p>
+  <div class="result" id="result">
+    💖 YAY!!! I’m so happy! 💖
   </div>
 </div>
 
 <script>
-/* FLOATING EMOJIS */
-const emojis = ["💖","✨","🎀","🐱","💌","🌸"];
-for (let i = 0; i < 20; i++) {
-  const e = document.createElement("div");
-  e.className = "float";
-  e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-  e.style.left = Math.random() * 100 + "vw";
-  e.style.animationDuration = 6 + Math.random() * 6 + "s";
-  document.body.appendChild(e);
-}
+  const gameArea = document.getElementById("gameArea");
+  const countEl = document.getElementById("count");
+  const envelope = document.getElementById("envelope");
+  const question = document.getElementById("question");
+  const result = document.getElementById("result");
+  const noBtn = document.getElementById("noBtn");
+  const buttonBox = document.getElementById("buttonBox");
 
-/* NO BUTTON DODGE (CLAMPED) */
-const noBtn = document.getElementById("no");
-const box = document.getElementById("box");
+  let count = 0;
 
-box.addEventListener("mousemove", e => {
-  const r = noBtn.getBoundingClientRect();
-  const b = box.getBoundingClientRect();
+  // CREATE HEARTS
+  for (let i = 0; i < 15; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💖";
+    heart.style.left = Math.random() * 90 + "%";
+    heart.style.top = Math.random() * 80 + "%";
 
-  const cx = r.left + r.width / 2;
-  const cy = r.top + r.height / 2;
-  const dx = e.clientX - cx;
-  const dy = e.clientY - cy;
+    heart.onclick = () => {
+      heart.remove();
+      count++;
+      countEl.textContent = count;
 
-  if (Math.hypot(dx, dy) < 90) {
-    noBtn.style.transform = "scale(1.2)";
+      if (count >= 10) {
+        envelope.classList.add("unlocked");
+        envelope.style.cursor = "pointer";
+      }
+    };
 
-    let x = Math.random() * (b.width - r.width);
-    let y = Math.random() * (b.height - r.height);
+    gameArea.appendChild(heart);
+  }
+
+  // ENVELOPE OPEN
+  envelope.onclick = () => {
+    if (!envelope.classList.contains("unlocked")) return;
+    question.style.display = "block";
+  };
+
+  // NO BUTTON DODGE (STAYS INSIDE CARD)
+  noBtn.addEventListener("mouseenter", () => {
+    const boxRect = buttonBox.getBoundingClientRect();
+    const maxX = boxRect.width - noBtn.offsetWidth;
+    const maxY = boxRect.height - noBtn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-  } else {
-    noBtn.style.transform = "scale(1)";
-  }
-});
+  });
 
-/* YES BUTTON */
-document.getElementById("yes").onclick = () => {
-  document.getElementById("result").style.display = "block";
-};
+  // YES BUTTON
+  document.getElementById("yesBtn").onclick = () => {
+    question.style.display = "none";
+    result.style.display = "block";
+  };
 </script>
 
 </body>
