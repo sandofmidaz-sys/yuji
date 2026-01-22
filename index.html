@@ -87,12 +87,16 @@ body {
 /* Heart collectibles */
 .heart {
   position:absolute;
-  font-size:30px;
+  font-size:40px; /* bigger hearts */
   cursor:pointer;
   user-select:none;
   transition: transform 0.2s ease;
   z-index:3;
   pointer-events:auto;
+  padding:10px; /* increased clickable area */
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* Heart pop animation */
@@ -120,7 +124,7 @@ body {
 .floating-emoji {
   position:absolute;
   pointer-events:none;
-  font-size:30px;
+  font-size:40px; /* bigger floating emojis */
   opacity:0.8;
   z-index:1;
 }
@@ -174,15 +178,16 @@ for(let i=0;i<totalFloating;i++){
   e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
   e.style.left=Math.random()*window.innerWidth+'px';
   e.style.bottom=Math.random()*window.innerHeight+'px';
-  e.style.fontSize=(Math.random()*20+20)+'px';
+  e.style.fontSize=(Math.random()*30+30)+'px'; // bigger variation
   floating.appendChild(e);
 
-  let sway=(Math.random()*3-1.5), posY=parseFloat(e.style.bottom);
+  let sway=(Math.random()*6-3); // bigger sway
+  let posY=parseFloat(e.style.bottom);
   function drift(){
-    posY += 1.5;
+    posY += 2; // slightly faster
     e.style.bottom = posY + 'px';
     e.style.left = parseFloat(e.style.left) + sway;
-    sway += (Math.random()*0.3-0.15);
+    sway += (Math.random()*0.4-0.2);
     if(posY > window.innerHeight+50){
       posY=-50;
       e.style.left = Math.random()*window.innerWidth+'px';
