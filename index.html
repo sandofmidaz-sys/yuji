@@ -111,6 +111,12 @@ body {
   </div>
 </div>
 
+<!-- Thank you card -->
+<div class="card" id="thankCard" style="display:none;">
+  <h1>Thank you so much! 🎀</h1>
+  <p>I promise you won’t regret it. 💖</p>
+</div>
+
 <script>
 // --- Floating emojis (spawn all at once, doubled) ---
 const floating = document.getElementById("floating");
@@ -144,6 +150,7 @@ for(let i=0;i<totalFloating;i++){
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
+const thankCard=document.getElementById("thankCard");
 const counterEl=document.getElementById("counter");
 let heartsCollected=0;
 const totalHearts=20;
@@ -155,9 +162,21 @@ function spawnHeart(){
   heart.style.left=Math.random()*(window.innerWidth-50)+"px";
   heart.style.top=Math.random()*(window.innerHeight-50)+"px";
   document.body.appendChild(heart);
+
+  // Sway and drift
+  let sway=(Math.random()*2-1), posY=parseFloat(heart.style.top);
+  function drift(){
+    posY -= 0.2;
+    heart.style.top = posY + 'px';
+    heart.style.left = parseFloat(heart.style.left) + sway;
+    sway += (Math.random()*0.2-0.1);
+    requestAnimationFrame(drift);
+  }
+  drift();
+
   heart.addEventListener("click",()=>{
     heartsCollected++;
-    heart.remove();
+    heart.remove(); // disappears after click
     counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
     if(heartsCollected>=totalHearts){
       envelopeCard.style.display="block";
@@ -217,7 +236,8 @@ if(noBtn){
 const yesBtn=document.getElementById("yesBtn");
 if(yesBtn){
   yesBtn.addEventListener("click",()=>{
-    valentineCard.style.display="block";
+    valentineCard.style.display="none";
+    thankCard.style.display="block"; // show thank you card
   });
 }
 
