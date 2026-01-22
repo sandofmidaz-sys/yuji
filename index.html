@@ -168,19 +168,26 @@ body {
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" src="https://drive.google.com/uc?export=download&id=1bWFdsle7MNTbc7_62sjPo6h57EqrZjgR" loop autoplay></audio>
+<audio id="bgMusic" loop muted autoplay>
+  <source src="https://drive.google.com/uc?export=download&id=1bWFdsle7MNTbc7_62sjPo6h57EqrZjgR" type="audio/mpeg">
+</audio>
 <audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
-// Force BGM to start at 00:12
+// --- BGM ONLY (added) ---
 const bgMusic = document.getElementById("bgMusic");
-bgMusic.addEventListener("canplay", () => {
-  if (bgMusic.currentTime < 12) {
-    bgMusic.currentTime = 12;
-  }
+
+bgMusic.addEventListener("loadedmetadata", () => {
+  bgMusic.currentTime = 12;
 });
+
+function unmuteBGM() {
+  bgMusic.muted = false;
+  document.removeEventListener("click", unmuteBGM);
+}
+document.addEventListener("click", unmuteBGM);
 
 // Floating emojis
 const floating = document.getElementById("floating");
