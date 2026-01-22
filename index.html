@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Valentine Mini-Game</title>
 <style>
+/* ---------------- Body & Background ---------------- */
 body {
   margin:0; padding:0;
   font-family:'Comic Sans MS', cursive;
@@ -14,20 +15,23 @@ body {
   position:relative;
 }
 
-/* Card styling */
+/* ---------------- Cards ---------------- */
 .card {
   position:absolute;
   top:50%; left:50%;
   transform: translate(-50%,-50%);
   width:450px; padding:30px;
-  background:#ffe6f0; border-radius:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  background: linear-gradient(145deg,#ffe6f0,#ffd6e8);
+  border-radius:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25), 0 0 20px rgba(255,192,203,0.4);
   text-align:center;
   z-index:2;
+  transition: transform 0.5s ease;
 }
-.card h1 { font-size:1.6rem; margin-bottom:10px; }
-.card p { font-size:1.2rem; margin-bottom:20px; }
+.card h1 { font-size:1.6rem; margin-bottom:10px; color:#800040; text-shadow: 1px 1px 3px #fff; }
+.card p { font-size:1.2rem; margin-bottom:20px; color:#500020; }
 
+/* ---------------- Button Container ---------------- */
 .button-container {
   position:relative;
   width:100%;
@@ -38,67 +42,97 @@ body {
   gap:30px;
 }
 
+/* ---------------- Buttons ---------------- */
 .button-container button {
   font-size:1rem;
   padding:10px 25px;
   border:none;
   border-radius:15px;
   cursor:pointer;
-  position:absolute; /* to allow NO button free movement */
-  transition: transform 0.2s ease, background 0.3s ease;
+  position:absolute;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
+/* YES Button */
 #yesBtn {
   background: linear-gradient(45deg,#ff8ec7,#b57fff);
   color:white;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+  box-shadow:0 0 10px rgba(255,140,199,0.8);
   z-index:5;
   left:30%;
   top:10px;
 }
-
-#noBtn {
-  background:#ffcce0; color:#800040;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
-  z-index:5;
-  left:70%;
-  top:10px;
+#yesBtn.magical {
+  animation: yesFloat 2s ease-in-out infinite, yesGlow 1.5s ease-in-out infinite alternate;
 }
-
-/* YES button magical */
 @keyframes yesFloat {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
-#yesBtn.magical { animation: yesFloat 2s ease-in-out infinite; }
+@keyframes yesGlow {
+  0% { box-shadow:0 0 10px rgba(255,140,199,0.6);}
+  100% { box-shadow:0 0 25px rgba(255,140,199,1);}
+}
 
-/* Heart collectibles */
+/* NO Button */
+#noBtn {
+  background:#ffcce0; color:#800040;
+  box-shadow:0 0 10px rgba(255,192,203,0.7);
+  z-index:5;
+  left:70%;
+  top:10px;
+}
+#noBtn:hover {
+  box-shadow:0 0 20px rgba(255,0,128,0.9);
+  transform: scale(1.05);
+}
+
+/* ---------------- Heart Collectibles ---------------- */
 .heart {
   position:absolute;
   font-size:30px;
   cursor:pointer;
   user-select:none;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.4s ease;
   z-index:3;
   pointer-events:auto;
 }
 
-/* Envelope */
+/* Heart pop animation */
+.heart-pop {
+  animation: pop 0.3s ease forwards;
+}
+@keyframes pop {
+  0% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.6); opacity:0.8; }
+  100% { transform: scale(0); opacity:0; }
+}
+
+/* ---------------- Envelope ---------------- */
 #envelope {
   font-size:80px;
   cursor:pointer;
   transition: transform 0.5s ease;
 }
 #envelope.locked { filter: grayscale(80%); }
+#envelope.animate {
+  animation: envelopeBounce 0.5s ease forwards;
+}
+@keyframes envelopeBounce {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(15deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
 
-/* Floating emojis */
+/* ---------------- Floating Emojis ---------------- */
 .floating-emoji {
   position:absolute;
   pointer-events:none;
   font-size:30px;
-  opacity:0.6;
+  opacity:0.8;
   z-index:1;
+  transition: transform 1s linear;
 }
 </style>
 </head>
@@ -135,7 +169,7 @@ body {
 </div>
 
 <script>
-// Floating emojis
+// ---------------- Floating Emojis ----------------
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
 const totalFloating = 20;
@@ -147,9 +181,18 @@ for(let i=0;i<totalFloating;i++){
   e.style.bottom=Math.random()*window.innerHeight+'px';
   e.style.fontSize=(Math.random()*20+20)+'px';
   floating.appendChild(e);
+  let sway = Math.random()*2-1;
+  function drift(){
+    const bottom = parseFloat(e.style.bottom);
+    e.style.bottom = bottom + 0.5 + 'px';
+    e.style.left = parseFloat(e.style.left) + sway + 'px';
+    sway += (Math.random()*0.2-0.1);
+    requestAnimationFrame(drift);
+  }
+  drift();
 }
 
-// Mini-game
+// ---------------- Mini-game ----------------
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
@@ -182,7 +225,8 @@ function spawnHeart(){
 
   heart.addEventListener("click",()=>{
     heartsCollected++;
-    heart.remove();
+    heart.classList.add("heart-pop");
+    setTimeout(()=>heart.remove(),300);
     counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
     if(heartsCollected>=totalHearts){
       envelopeCard.style.display="block";
@@ -193,33 +237,39 @@ function spawnHeart(){
 }
 for(let i=0;i<totalHearts;i++) spawnHeart();
 
-// Envelope
+// ---------------- Envelope ----------------
 const envelope = document.getElementById("envelope");
 envelope.addEventListener("click",()=>{
   if(!envelope.classList.contains("locked")){
-    envelopeCard.style.display="none";
-    valentineCard.style.display="block";
+    envelope.classList.add("animate");
+    setTimeout(()=>{
+      envelopeCard.style.display="none";
+      valentineCard.style.display="block";
+      envelope.classList.remove("animate");
+    },500);
   }
 });
 
-// YES button magical
+// ---------------- YES button magical ----------------
 const yesBtn=document.getElementById("yesBtn");
 if(yesBtn){
   yesBtn.classList.add("magical");
   yesBtn.addEventListener("click",()=>{
+    yesBtn.style.transform="scale(1.2)";
+    setTimeout(()=>{yesBtn.style.transform="scale(1)";},300);
     valentineCard.style.display="none";
     thankCard.style.display="block";
   });
 }
 
-// NO button with cat and big jump, OFFSCREEN-PROOF
+// ---------------- NO button with cat ----------------
 const noBtn=document.getElementById("noBtn");
 if(noBtn){
   const cat=document.createElement("span");
   cat.textContent="🐱";
   cat.style.position="absolute";
-  cat.style.fontSize="24px";
-  cat.style.top="-28px";
+  cat.style.fontSize="28px";
+  cat.style.top="-32px";
   cat.style.left="50%";
   cat.style.transform="translateX(-50%)";
   noBtn.style.position="absolute";
@@ -229,24 +279,21 @@ if(noBtn){
   let direction=1;
   setInterval(()=>{
     const top=parseFloat(cat.style.top.replace("px",""));
-    if(top>-20||top<-30) direction*=-1;
+    if(top>-20||top<-32) direction*=-1;
     cat.style.top=(top+direction*2)+"px";
   },100);
 
-  // NO button jumps big distance inside valentineCard
+  // NO button jumps inside valentineCard
   valentineCard.addEventListener("mousemove",(e)=>{
     const rect=noBtn.getBoundingClientRect();
     const cardRect=valentineCard.getBoundingClientRect();
-
     const mouseX = e.clientX - cardRect.left;
     const mouseY = e.clientY - cardRect.top;
-
     const btnX = rect.left - cardRect.left + rect.width/2;
     const btnY = rect.top - cardRect.top + rect.height/2;
-
     const distance = Math.sqrt(Math.pow(btnX-mouseX,2)+Math.pow(btnY-mouseY,2));
     if(distance<250){
-      const padding=5; // keep inside card
+      const padding=5;
       let newX = Math.random()*(valentineCard.clientWidth - rect.width - 2*padding)+padding;
       let newY = Math.random()*(valentineCard.clientHeight - rect.height - 2*padding)+padding;
       noBtn.style.left = newX + "px";
