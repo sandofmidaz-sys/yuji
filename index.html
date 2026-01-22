@@ -115,32 +115,35 @@ body {
 </div>
 
 <script>
-// --- Floating emojis ---
+// --- SPAWN ALL FLOATING EMOJIS ON PAGE LOAD ---
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-function spawnFloating() {
-  const count = Math.floor(Math.random()*3)+2;
-  for(let i=0;i<count;i++){
-    const e = document.createElement('div');
-    e.className='floating-emoji';
-    e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-    e.style.left=Math.random()*window.innerWidth+'px';
-    e.style.top=Math.random()*window.innerHeight+'px';
-    e.style.fontSize=(Math.random()*20+20)+'px';
-    floating.appendChild(e);
-    let sway=(Math.random()*2-1), posY=parseFloat(e.style.top);
-    function drift(){
-      posY -= 0.3;
-      e.style.top=posY+'px';
-      e.style.left=parseFloat(e.style.left)+sway+'px';
-      sway+=(Math.random()*0.2-0.1);
-      if(posY<-50) e.remove();
-      else requestAnimationFrame(drift);
+const totalFloating = 30; // total emojis at once
+
+for(let i=0;i<totalFloating;i++){
+  const e = document.createElement('div');
+  e.className='floating-emoji';
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left=Math.random()*window.innerWidth+'px';
+  e.style.top=Math.random()*window.innerHeight+'px';
+  e.style.fontSize=(Math.random()*20+20)+'px';
+  e.style.opacity=(Math.random()*0.6+0.4);
+  floating.appendChild(e);
+
+  let sway=(Math.random()*2-1), posY=parseFloat(e.style.top);
+  function drift(){
+    posY -= 0.3; // vertical drift
+    e.style.top = posY + 'px';
+    e.style.left = parseFloat(e.style.left) + sway + 'px';
+    sway += (Math.random()*0.2-0.1); // gentle sway
+    if(posY < -50) {
+      posY = window.innerHeight + 50; // wrap to bottom instead of removing
+      e.style.left = Math.random()*window.innerWidth+'px';
     }
-    drift();
+    requestAnimationFrame(drift);
   }
+  drift();
 }
-setInterval(spawnFloating,80);
 
 // --- Mini-game ---
 const gameCard=document.getElementById("gameCard");
