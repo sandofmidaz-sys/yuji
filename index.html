@@ -19,6 +19,7 @@ body {
   pointer-events:none;
   user-select:none;
   transition: transform 0.3s ease;
+  z-index:1;
 }
 
 /* Card */
@@ -76,16 +77,12 @@ body {
   transition: transform 0.5s ease;
 }
 #envelope.locked { filter: grayscale(80%); }
-#envelope.open { transform: rotateX(180deg); }
 
 /* Counter */
 #counter {
   font-size:1.2rem;
   margin-bottom:15px;
 }
-
-/* Floating hearts/emoji container */
-#floating { position:fixed; width:100%; height:100%; top:0; left:0; pointer-events:none; z-index:1; }
 </style>
 </head>
 <body>
@@ -115,11 +112,10 @@ body {
 </div>
 
 <script>
-// --- SPAWN ALL FLOATING EMOJIS ON PAGE LOAD ---
+// --- Floating emojis (spawn all at once) ---
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-const totalFloating = 30; // total emojis at once
-
+const totalFloating = 25;
 for(let i=0;i<totalFloating;i++){
   const e = document.createElement('div');
   e.className='floating-emoji';
@@ -129,15 +125,14 @@ for(let i=0;i<totalFloating;i++){
   e.style.fontSize=(Math.random()*20+20)+'px';
   e.style.opacity=(Math.random()*0.6+0.4);
   floating.appendChild(e);
-
   let sway=(Math.random()*2-1), posY=parseFloat(e.style.top);
   function drift(){
-    posY -= 0.3; // vertical drift
+    posY -= 0.3;
     e.style.top = posY + 'px';
     e.style.left = parseFloat(e.style.left) + sway + 'px';
-    sway += (Math.random()*0.2-0.1); // gentle sway
+    sway += (Math.random()*0.2-0.1);
     if(posY < -50) {
-      posY = window.innerHeight + 50; // wrap to bottom instead of removing
+      posY = window.innerHeight + 50;
       e.style.left = Math.random()*window.innerWidth+'px';
     }
     requestAnimationFrame(drift);
@@ -157,13 +152,12 @@ function spawnHeart(){
   const heart=document.createElement("div");
   heart.className="heart";
   heart.textContent="💖";
-  // Spawn anywhere in the viewport
   heart.style.left=Math.random()*(window.innerWidth-50)+"px";
   heart.style.top=Math.random()*(window.innerHeight-50)+"px";
-  document.body.appendChild(heart); // add to body so clickable
+  document.body.appendChild(heart);
   heart.addEventListener("click",()=>{
     heartsCollected++;
-    heart.remove(); // remove after click
+    heart.remove();
     counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
     if(heartsCollected>=totalHearts){
       envelopeCard.style.display="block";
@@ -173,13 +167,12 @@ function spawnHeart(){
   });
 }
 
-// spawn enough hearts
 for(let i=0;i<totalHearts;i++) spawnHeart();
 
 // --- NO button with cat ---
 const noBtn = document.getElementById("noBtn");
 const btnContainer = document.querySelector(".button-container");
-const dodgeDistance = 250;
+const dodgeDistance = 300;
 
 if(noBtn){
   const cat = document.createElement("span");
@@ -197,7 +190,7 @@ if(noBtn){
   setInterval(()=>{
     const top=parseFloat(cat.style.top.replace("px",""));
     if(top>-20||top<-30) direction*=-1;
-    cat.style.top=(top+direction*1.2)+"px";
+    cat.style.top=(top+direction*1.5)+"px";
   },100);
 
   noBtn.addEventListener("mousemove",(e)=>{
@@ -208,7 +201,7 @@ if(noBtn){
     const dx=btnCenterX-cursorX;
     const dy=btnCenterY-cursorY;
     const distance=Math.sqrt(dx*dx+dy*dy);
-    if(distance<100){
+    if(distance<120){
       let newX=rect.left+(dx/distance)*dodgeDistance;
       let newY=rect.top+(dy/distance)*dodgeDistance;
       const containerRect=btnContainer.getBoundingClientRect();
