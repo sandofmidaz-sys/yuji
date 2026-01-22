@@ -1,223 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Valentine 💖</title>
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: "Comic Sans MS", "Poppins", sans-serif;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
 
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ffd6e8, #e0c3ff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .card {
-    width: 420px;
-    min-height: 520px;
-    background: #fff0f7;
-    border-radius: 24px;
-    padding: 24px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    position: relative;
-  }
-
-  h1 {
-    margin-top: 10px;
-    color: #d63384;
-  }
-
-  .instruction {
-    margin: 10px 0 15px;
-    color: #7a2e4a;
-    font-weight: bold;
-  }
-
-  /* HEART MINI GAME */
-  .game-area {
-    position: relative;
-    height: 220px;
-    margin-bottom: 15px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.5);
-    overflow: hidden;
-  }
-
-  .heart {
-    position: absolute;
-    font-size: 28px;
-    cursor: pointer;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-  }
-
-  .counter {
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #b83280;
-  }
-
-  /* ENVELOPE */
-  .envelope {
-    font-size: 90px;
-    cursor: not-allowed;
-    opacity: 0.4;
-    transition: 0.3s;
-  }
-
-  .envelope.unlocked {
-    cursor: pointer;
-    opacity: 1;
-    transform: scale(1.05);
-  }
-
-  /* QUESTION */
-  .question {
-    display: none;
-    margin-top: 15px;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 15px;
-    position: relative;
-    height: 60px;
-  }
-
-  button {
-    width: 120px;
-    height: 45px;
-    border-radius: 24px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  }
-
-  .yes {
-    background: linear-gradient(135deg, #ff5fa2, #b86bff);
-    color: white;
-  }
-
-  .no {
-    background: #ffe3ef;
-    color: #a83c6a;
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
-  .result {
-    display: none;
-    margin-top: 20px;
-    font-size: 18px;
-    color: #b83280;
-  }
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Comic Neue', cursive; }
+  body { height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg, #ffd6e8, #e0c3ff); overflow:hidden; }
+  .card { width:420px; min-height:520px; background:#fff0f7; border-radius:24px; padding:24px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.15); position:relative; }
+  h1 { color:#d63384; margin-bottom:10px; }
+  .instruction { color:#7a2e4a; font-weight:bold; margin-bottom:10px; }
+  .counter { margin-bottom:10px; font-weight:bold; color:#b83280; }
+  button { width:120px; height:45px; border:none; border-radius:24px; font-size:16px; cursor:pointer; box-shadow:0 6px 12px rgba(0,0,0,0.2); }
+  .yes { background: linear-gradient(135deg, #ff5fa2, #b86bff); color:white; }
+  .no { background:#ffe3ef; color:#a83c6a; position:absolute; left:0; top:0; }
+  .game-area { position:relative; height:220px; margin-bottom:15px; border-radius:16px; background: rgba(255,255,255,0.5); overflow:hidden; }
+  .heart { position:absolute; font-size:28px; cursor:pointer; animation: float 3s ease-in-out infinite; }
+  @keyframes float {0% {transform:translateY(0);}50%{transform:translateY(-10px);}100%{transform:translateY(0);}}
+  .envelope { font-size:90px; cursor:not-allowed; opacity:0.4; transition:0.3s; }
+  .envelope.unlocked { cursor:pointer; opacity:1; transform:scale(1.05); }
+  .question, .result { display:none; margin-top:15px; }
+  .buttons { display:flex; justify-content:center; gap:16px; margin-top:15px; position:relative; height:60px; }
+  /* Floating emojis behind everything */
+  #floating { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+  .floating-emoji { position:absolute; font-size:24px; opacity:0.7; animation: sway 4s infinite alternate; }
+  @keyframes sway {0% {transform:translateX(0);}100%{transform:translateX(10px);}}
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>💌 Valentine Mission 💌</h1>
+<div id="floating"></div>
 
-  <div class="instruction">Collect 10 hearts to unlock the envelope</div>
+<div class="card" id="miniGameSection">
+  <h1>💌 Valentine Mini-Game 💌</h1>
+  <div class="instruction">Collect 10 hearts to unlock the envelope!</div>
   <div class="counter">Hearts collected: <span id="count">0</span>/10</div>
-
   <div class="game-area" id="gameArea"></div>
+</div>
 
+<div class="card" id="envelopeSection" style="display:none;">
+  <h1>💌 Locked Envelope 💌</h1>
+  <div class="instruction">Collect more hearts to unlock it!</div>
+  <div class="counter">Hearts collected: <span id="count2">0</span>/10</div>
   <div class="envelope" id="envelope">💌</div>
+</div>
 
-  <div class="question" id="question">
-    <p>
-      💕 Camille Anndrea Julgan Lebico,<br>
-      will you be my Valentine? :3<br>
-      <small>— Josh Daz</small>
-    </p>
-
-    <div class="buttons" id="buttonBox">
-      <button class="yes" id="yesBtn">YES 💖</button>
-      <button class="no" id="noBtn">NO 🙃</button>
-    </div>
-  </div>
-
-  <div class="result" id="result">
-    💖 YAY!!! I’m so happy! 💖
+<div class="card" id="questionSection" style="display:none;">
+  <h1>💖 Camille Anndrea Julgan Lebico 💖</h1>
+  <p>Will you be my Valentine? :3</p>
+  <div class="buttons" id="buttonBox">
+    <button class="yes" id="yesBtn">YES 💖</button>
+    <button class="no" id="noBtn">NO 🙃</button>
   </div>
 </div>
 
+<div class="card" id="resultSection" style="display:none;">
+  <h1>💖 YAY!!! 💖</h1>
+  <p>I'm so happy! Let's make it amazing!</p>
+</div>
+
 <script>
-  const gameArea = document.getElementById("gameArea");
-  const countEl = document.getElementById("count");
-  const envelope = document.getElementById("envelope");
-  const question = document.getElementById("question");
-  const result = document.getElementById("result");
-  const noBtn = document.getElementById("noBtn");
-  const buttonBox = document.getElementById("buttonBox");
+const floating = document.getElementById("floating");
+const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬'];
+function spawnFloating() {
+  const e = document.createElement('div');
+  e.className='floating-emoji';
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left=Math.random()*window.innerWidth+'px';
+  e.style.top=Math.random()*window.innerHeight+'px';
+  e.style.fontSize=(Math.random()*20+20)+'px';
+  floating.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+}
+setInterval(spawnFloating, 500);
 
-  let count = 0;
-
-  // CREATE HEARTS
-  for (let i = 0; i < 15; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "💖";
-    heart.style.left = Math.random() * 90 + "%";
-    heart.style.top = Math.random() * 80 + "%";
-
-    heart.onclick = () => {
-      heart.remove();
-      count++;
-      countEl.textContent = count;
-
-      if (count >= 10) {
-        envelope.classList.add("unlocked");
-        envelope.style.cursor = "pointer";
-      }
-    };
-
-    gameArea.appendChild(heart);
+// Mini-game
+const gameArea = document.getElementById("gameArea");
+let count = 0;
+for(let i=0;i<15;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent="💖";
+  h.style.left=Math.random()*90+"%";
+  h.style.top=Math.random()*80+"%";
+  h.onclick=function(){
+    h.remove();
+    count++;
+    document.getElementById("count").textContent=count;
+    if(count>=10){
+      document.getElementById("miniGameSection").style.display="none";
+      document.getElementById("envelopeSection").style.display="block";
+    }
   }
+  gameArea.appendChild(h);
+}
 
-  // ENVELOPE OPEN
-  envelope.onclick = () => {
-    if (!envelope.classList.contains("unlocked")) return;
-    question.style.display = "block";
-  };
+// Envelope unlock
+let count2=0;
+for(let i=0;i<10;i++){
+  const h2=document.createElement("div");
+  h2.className="heart";
+  h2.textContent="💖";
+  h2.style.left=Math.random()*90+"%";
+  h2.style.top=Math.random()*80+"%";
+  h2.onclick=function(){
+    h2.remove();
+    count2++;
+    document.getElementById("count2").textContent=count2;
+    if(count2>=10){
+      const env=document.getElementById("envelope");
+      env.classList.add("unlocked");
+      env.onclick=function(){
+        document.getElementById("envelopeSection").style.display="none";
+        document.getElementById("questionSection").style.display="block";
+      }
+    }
+  }
+  document.getElementById("envelopeSection").appendChild(h2);
+}
 
-  // NO BUTTON DODGE (STAYS INSIDE CARD)
-  noBtn.addEventListener("mouseenter", () => {
-    const boxRect = buttonBox.getBoundingClientRect();
-    const maxX = boxRect.width - noBtn.offsetWidth;
-    const maxY = boxRect.height - noBtn.offsetHeight;
+// NO button dodge
+const noBtn=document.getElementById("noBtn");
+const buttonBox=document.getElementById("buttonBox");
+noBtn.addEventListener("mouseenter",()=>{
+  const boxRect=buttonBox.getBoundingClientRect();
+  const maxX=boxRect.width-noBtn.offsetWidth;
+  const maxY=boxRect.height-noBtn.offsetHeight;
+  const x=Math.random()*maxX;
+  const y=Math.random()*maxY;
+  noBtn.style.left=x+"px";
+  noBtn.style.top=y+"px";
+});
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
-
-  // YES BUTTON
-  document.getElementById("yesBtn").onclick = () => {
-    question.style.display = "none";
-    result.style.display = "block";
-  };
+// YES button
+document.getElementById("yesBtn").onclick=()=>{
+  document.getElementById("questionSection").style.display="none";
+  document.getElementById("resultSection").style.display="block";
+};
 </script>
-
 </body>
 </html>
