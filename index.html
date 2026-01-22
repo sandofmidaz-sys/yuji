@@ -46,7 +46,7 @@ body {
   border:none;
   border-radius:18px;
   cursor:pointer;
-  position:absolute; /* NO button free movement */
+  position:absolute;
   transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -87,13 +87,13 @@ body {
 /* Heart collectibles */
 .heart {
   position:absolute;
-  font-size:40px; /* bigger hearts */
+  font-size:40px;
   cursor:pointer;
   user-select:none;
   transition: transform 0.2s ease;
   z-index:3;
   pointer-events:auto;
-  padding:10px; /* increased clickable area */
+  padding:10px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -124,7 +124,7 @@ body {
 .floating-emoji {
   position:absolute;
   pointer-events:none;
-  font-size:40px; /* bigger floating emojis */
+  font-size:40px;
   opacity:0.8;
   z-index:1;
 }
@@ -167,6 +167,12 @@ body {
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
+<!-- Audio -->
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
+<audio id="heartSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+<audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
+<audio id="noSound" src="https://www.fesliyanstudios.com/play-mp3/4311" preload="auto"></audio>
+
 <script>
 // Floating emojis
 const floating = document.getElementById("floating");
@@ -178,13 +184,13 @@ for(let i=0;i<totalFloating;i++){
   e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
   e.style.left=Math.random()*window.innerWidth+'px';
   e.style.bottom=Math.random()*window.innerHeight+'px';
-  e.style.fontSize=(Math.random()*30+30)+'px'; // bigger variation
+  e.style.fontSize=(Math.random()*30+30)+'px';
   floating.appendChild(e);
 
-  let sway=(Math.random()*6-3); // bigger sway
+  let sway=(Math.random()*6-3);
   let posY=parseFloat(e.style.bottom);
   function drift(){
-    posY += 2; // slightly faster
+    posY += 2;
     e.style.bottom = posY + 'px';
     e.style.left = parseFloat(e.style.left) + sway;
     sway += (Math.random()*0.4-0.2);
@@ -203,6 +209,10 @@ const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
 const thankCard=document.getElementById("thankCard");
 const counterEl=document.getElementById("counter");
+const heartSound = document.getElementById("heartSound");
+const yesSound = document.getElementById("yesSound");
+const noSound = document.getElementById("noSound");
+
 let heartsCollected=0;
 const totalHearts=20;
 
@@ -228,21 +238,17 @@ function spawnHeart(){
   }
   drift();
 
-  // Fixed click handler with counter pop animation
   heart.addEventListener("click", function popHeart() {
-    heart.removeEventListener("click", popHeart); // prevent multiple clicks
+    heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
+    heartSound.currentTime=0; heartSound.play(); // added sound
 
     setTimeout(() => {
       heartsCollected++;
       counterEl.textContent = `Hearts collected: ${heartsCollected} / ${totalHearts}`;
-
-      // Counter pop animation
       counterEl.style.transform = "scale(1.5)";
       counterEl.style.transition = "transform 0.2s ease";
-      setTimeout(() => {
-        counterEl.style.transform = "scale(1)";
-      }, 200);
+      setTimeout(() => { counterEl.style.transform = "scale(1)"; }, 200);
 
       heart.remove();
 
@@ -251,7 +257,7 @@ function spawnHeart(){
         gameCard.style.display="none";
         document.getElementById("envelope").classList.remove("locked");
       }
-    }, 400); // matches animation duration
+    }, 400);
   });
 }
 for(let i=0;i<totalHearts;i++) spawnHeart();
@@ -274,6 +280,7 @@ if(yesBtn){
   yesBtn.classList.add("magical");
   yesBtn.addEventListener("click",()=> {
     yesBtn.style.transform="scale(1.3)";
+    yesSound.currentTime=0; yesSound.play(); // added sound
     setTimeout(()=>yesBtn.style.transform="scale(1)",300);
     valentineCard.style.display="none";
     thankCard.style.display="block";
@@ -293,7 +300,6 @@ if(noBtn){
   noBtn.style.position="absolute";
   noBtn.appendChild(cat);
 
-  // Cat bouncing
   let direction=1;
   setInterval(()=>{
     const top=parseFloat(cat.style.top.replace("px",""));
@@ -301,8 +307,6 @@ if(noBtn){
     cat.style.top=(top+direction*2)+"px";
   },100);
 
-  // NO button jumps faster but stays inside card
-  const cardRect = valentineCard.getBoundingClientRect();
   document.addEventListener("mousemove",(e)=>{
     if(valentineCard.style.display==="block"){
       const rect=noBtn.getBoundingClientRect();
@@ -316,6 +320,7 @@ if(noBtn){
         let newY=Math.random()*maxY+40;
         noBtn.style.left = newX + 'px';
         noBtn.style.top = newY + 'px';
+        noSound.currentTime=0; noSound.play(); // added sound
       }
     }
   });
