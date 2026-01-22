@@ -169,9 +169,9 @@ body {
 
 <!-- Audio -->
 <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
-<audio id="heartSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio> <!-- updated pop sound -->
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
-<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio> <!-- short angry cat meow -->
+<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
 // Floating emojis
@@ -241,7 +241,7 @@ function spawnHeart(){
   heart.addEventListener("click", function popHeart() {
     heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
-    heartSound.currentTime=0; heartSound.play();
+    heartSound.currentTime=0; heartSound.play(); // updated pop sound
 
     setTimeout(() => {
       heartsCollected++;
@@ -320,7 +320,7 @@ if(noBtn){
         let newY=Math.random()*maxY+40;
         noBtn.style.left = newX + 'px';
         noBtn.style.top = newY + 'px';
-        noSound.currentTime=0; noSound.play(); // plays short angry cat meow
+        noSound.currentTime=0; noSound.play();
       }
     }
   });
