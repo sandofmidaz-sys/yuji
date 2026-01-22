@@ -16,7 +16,7 @@ body {
   position:relative;
 }
 
-/* Card styling */
+/* Card */
 .card {
   position:absolute;
   top:50%;
@@ -48,39 +48,60 @@ body {
   border-radius:15px;
   cursor:pointer;
   position:absolute;
-  transition: transform 0.2s ease, background 0.3s ease;
 }
 
+/* YES */
 #yesBtn {
   background: linear-gradient(45deg,#ff8ec7,#b57fff);
   color:white;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
   left:30%;
   top:10px;
+  box-shadow: 0 0 15px rgba(255,140,200,0.6);
+  animation: yesGlow 2.5s ease-in-out infinite;
 }
 
+@keyframes yesGlow {
+  0% { box-shadow:0 0 15px rgba(255,140,200,0.5); }
+  50% { box-shadow:0 0 30px rgba(255,140,200,0.9); }
+  100% { box-shadow:0 0 15px rgba(255,140,200,0.5); }
+}
+
+#yesBtn:active {
+  animation: yesClick 0.4s ease;
+}
+
+@keyframes yesClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* NO */
 #noBtn {
   background:#ffcce0;
   color:#800040;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
   left:70%;
   top:10px;
+  box-shadow: 0 0 12px rgba(255,120,180,0.6);
 }
 
-/* YES float */
-@keyframes yesFloat {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+/* Cat */
+#noBtn span {
+  font-size:32px; /* BIGGER CAT */
+  animation: catRide 0.8s ease-in-out infinite;
 }
-#yesBtn.magical { animation: yesFloat 2s ease-in-out infinite; }
+
+@keyframes catRide {
+  0% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) translateY(-6px) rotate(5deg); }
+  100% { transform: translateX(-50%) rotate(-5deg); }
+}
 
 /* Hearts */
 .heart {
   position:absolute;
   font-size:30px;
   cursor:pointer;
-  user-select:none;
   z-index:3;
 }
 
@@ -88,21 +109,24 @@ body {
 #envelope {
   font-size:80px;
   cursor:pointer;
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
 }
+
 #envelope.locked { filter: grayscale(80%); }
 
-/* Floating emojis */
-#floating {
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:1;
+#envelope.opening {
+  animation: envelopePop 0.6s ease;
 }
-.floating-emoji {
-  position:absolute;
-  will-change: transform;
+
+@keyframes envelopePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3) rotate(5deg); }
+  100% { transform: scale(1); }
 }
+
+/* Floating emojis (unchanged) */
+#floating { position:fixed; inset:0; pointer-events:none; z-index:1; }
+.floating-emoji { position:absolute; will-change:transform; }
 </style>
 </head>
 
@@ -110,19 +134,16 @@ body {
 
 <div id="floating"></div>
 
-<!-- Mini-game -->
 <div class="card" id="gameCard">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
-<!-- Envelope -->
 <div class="card" id="envelopeCard" style="display:none;">
   <div id="envelope" class="locked">💌</div>
   <p>Click to open your Valentine!</p>
 </div>
 
-<!-- Valentine -->
 <div class="card" id="valentineCard" style="display:none;">
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>my treat hehe :3</p>
@@ -132,153 +153,100 @@ body {
   </div>
 </div>
 
-<!-- Thank you -->
 <div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! 🎀</h1>
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
 <script>
-/* ================= FLOATING EMOJIS (ONLY PART CHANGED) ================= */
-
+/* ===== FLOATING EMOJIS (LOCKED) ===== */
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-const FLOATING_COUNT = 40; // doubled
-
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
-
-document.addEventListener("mousemove", e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-for (let i = 0; i < FLOATING_COUNT; i++) {
-  const el = document.createElement("div");
-  el.className = "floating-emoji";
-  el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-
-  let x = Math.random()*window.innerWidth;
-  let y = Math.random()*window.innerHeight;
-  let size = Math.random()*18 + 22;
-  let speed = Math.random()*0.4 + 0.2;
-  let sway = Math.random()*2 + 1;
-  let angle = Math.random()*Math.PI*2;
-  let rotation = Math.random()*360;
-  let depth = Math.random()*0.6 + 0.4;
-
-  el.style.fontSize = size + "px";
-  el.style.opacity = Math.random()*0.2 + 0.8;
-
-  floating.appendChild(el);
-
-  function animate() {
-    y -= speed * depth;
-    angle += 0.01 * depth;
-    rotation += 0.05 * depth;
-
-    if (y < -60) {
-      y = window.innerHeight + 60;
-      x = Math.random()*window.innerWidth;
-    }
-
-    const parallaxX = (mouseX - window.innerWidth/2) * 0.002 * depth;
-    const parallaxY = (mouseY - window.innerHeight/2) * 0.002 * depth;
-
-    const swayX = Math.sin(angle) * sway;
-
-    el.style.transform =
-      `translate(${x + swayX + parallaxX}px, ${y + parallaxY}px)
-       rotate(${rotation}deg)`;
-
+for(let i=0;i<40;i++){
+  const e=document.createElement("div");
+  e.className="floating-emoji";
+  e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+  let x=Math.random()*innerWidth, y=Math.random()*innerHeight;
+  let s=Math.random()*0.4+0.2, a=Math.random()*6;
+  e.style.fontSize=(Math.random()*18+22)+"px";
+  e.style.opacity=0.9;
+  floating.appendChild(e);
+  (function animate(){
+    y-=s;
+    a+=0.01;
+    if(y<-60){y=innerHeight+60; x=Math.random()*innerWidth;}
+    e.style.transform=`translate(${x+Math.sin(a)*10}px,${y}px) rotate(${a*10}deg)`;
     requestAnimationFrame(animate);
-  }
-  animate();
+  })();
 }
 
-/* ================= REST OF YOUR ORIGINAL LOGIC (UNCHANGED) ================= */
-
+/* ===== ORIGINAL GAME LOGIC (LOCKED) ===== */
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
 const thankCard=document.getElementById("thankCard");
 const counterEl=document.getElementById("counter");
 let heartsCollected=0;
-const totalHearts=20;
 
-function spawnHeart(){
-  const heart=document.createElement("div");
-  heart.className="heart";
-  heart.textContent="💖";
-  heart.style.left=Math.random()*(window.innerWidth-50)+"px";
-  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
-  document.body.appendChild(heart);
-
-  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
-  function drift(){
-    posY -= 3;
-    heart.style.top = posY + 'px';
-    heart.style.left = parseFloat(heart.style.left) + sway;
-    sway += (Math.random()*0.3-0.15);
-    if(posY < -50){
-      posY = window.innerHeight + 50;
-      heart.style.left = Math.random()*(window.innerWidth-50)+"px";
-    }
+for(let i=0;i<20;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent="💖";
+  h.style.left=Math.random()*(innerWidth-50)+"px";
+  h.style.top=Math.random()*(innerHeight-50)+"px";
+  document.body.appendChild(h);
+  (function drift(){
+    let y=parseFloat(h.style.top);
+    y-=3;
+    if(y<-50)y=innerHeight+50;
+    h.style.top=y+"px";
     requestAnimationFrame(drift);
-  }
-  drift();
-
-  heart.addEventListener("click",()=>{
+  })();
+  h.onclick=()=>{
     heartsCollected++;
-    heart.remove();
-    counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
-    if(heartsCollected>=totalHearts){
-      envelopeCard.style.display="block";
+    h.remove();
+    counterEl.textContent=`Hearts collected: ${heartsCollected} / 20`;
+    if(heartsCollected>=20){
       gameCard.style.display="none";
-      document.getElementById("envelope").classList.remove("locked");
+      envelopeCard.style.display="block";
+      envelope.classList.remove("locked");
     }
-  });
+  };
 }
-for(let i=0;i<totalHearts;i++) spawnHeart();
 
 const envelope=document.getElementById("envelope");
-envelope.addEventListener("click",()=>{
+envelope.onclick=()=>{
   if(!envelope.classList.contains("locked")){
-    envelopeCard.style.display="none";
-    valentineCard.style.display="block";
+    envelope.classList.add("opening");
+    setTimeout(()=>{
+      envelopeCard.style.display="none";
+      valentineCard.style.display="block";
+      envelope.classList.remove("opening");
+    },500);
   }
-});
+};
 
 const yesBtn=document.getElementById("yesBtn");
-yesBtn.classList.add("magical");
-yesBtn.addEventListener("click",()=>{
+yesBtn.onclick=()=>{
   valentineCard.style.display="none";
   thankCard.style.display="block";
-});
+};
 
 const noBtn=document.getElementById("noBtn");
 const cat=document.createElement("span");
 cat.textContent="🐱";
 cat.style.position="absolute";
-cat.style.top="-28px";
+cat.style.top="-34px";
 cat.style.left="50%";
 cat.style.transform="translateX(-50%)";
 noBtn.appendChild(cat);
 
-let dir=1;
-setInterval(()=>{
-  let t=parseFloat(cat.style.top);
-  if(t<-35||t>-20) dir*=-1;
-  cat.style.top=(t+dir*2)+"px";
-},100);
-
 document.addEventListener("mousemove",(e)=>{
-  const rect=noBtn.getBoundingClientRect();
-  const dx=(rect.left+rect.width/2)-e.clientX;
-  const dy=(rect.top+rect.height/2)-e.clientY;
-  if(Math.sqrt(dx*dx+dy*dy)<250){
-    noBtn.style.left=Math.random()*(valentineCard.offsetWidth-rect.width)+"px";
-    noBtn.style.top=Math.random()*(valentineCard.offsetHeight-rect.height-40)+40+"px";
+  const r=noBtn.getBoundingClientRect();
+  const d=Math.hypot(r.x-e.clientX,r.y-e.clientY);
+  if(d<250){
+    noBtn.style.left=Math.random()*(valentineCard.offsetWidth-r.width)+"px";
+    noBtn.style.top=Math.random()*(valentineCard.offsetHeight-r.height-40)+40+"px";
   }
 });
 </script>
