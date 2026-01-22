@@ -61,18 +61,27 @@ button { width:120px; height:45px; border:none; border-radius:24px; font-size:16
 
 <script>
 const floating = document.getElementById("floating");
-const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬'];
+// Add more emojis to the list for variety
+const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
+
+// Function to spawn multiple floating emojis at once
 function spawnFloating() {
-  const e = document.createElement('div');
-  e.className='floating-emoji';
-  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-  e.style.left=Math.random()*window.innerWidth+'px';
-  e.style.top=Math.random()*window.innerHeight+'px';
-  e.style.fontSize=(Math.random()*20+20)+'px';
-  floating.appendChild(e);
-  setTimeout(()=>e.remove(),6000);
+  const count = Math.floor(Math.random() * 3) + 2; // spawn 2-4 at a time
+  for (let i = 0; i < count; i++) {
+    const e = document.createElement('div');
+    e.className = 'floating-emoji';
+    e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    e.style.left = Math.random() * window.innerWidth + 'px';
+    e.style.top = Math.random() * window.innerHeight + 'px';
+    e.style.fontSize = (Math.random() * 20 + 20) + 'px';
+    floating.appendChild(e);
+    // Remove after 6s
+    setTimeout(() => e.remove(), 6000);
+  }
 }
-setInterval(spawnFloating, 500);
+
+// Spawn more often to make it plentiful
+setInterval(spawnFloating, 400);
 
 // Mini-game
 const gameArea = document.getElementById("gameArea");
