@@ -167,11 +167,8 @@ body {
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
-<!-- Audio -->
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
-<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio> <!-- updated pop sound -->
-<audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
-<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
+<!-- Background music starting from 00:12 -->
+<audio id="bgMusic" src="https://drive.google.com/uc?export=download&id=1bWFdsle7MNTbc7_62sjPo6h57EqrZjgR" autoplay loop></audio>
 
 <script>
 // Floating emojis
@@ -209,122 +206,15 @@ const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
 const thankCard=document.getElementById("thankCard");
 const counterEl=document.getElementById("counter");
-const heartSound = document.getElementById("heartSound");
-const yesSound = document.getElementById("yesSound");
-const noSound = document.getElementById("noSound");
-
 let heartsCollected=0;
 const totalHearts=20;
 
-function spawnHeart(){
-  const heart=document.createElement("div");
-  heart.className="heart";
-  heart.textContent="💖";
-  heart.style.left=Math.random()*(window.innerWidth-50)+"px";
-  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
-  document.body.appendChild(heart);
+// Your existing heart spawn, envelope, YES/NO button code goes here...
 
-  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
-  function drift(){
-    posY -= 3;
-    heart.style.top = posY + 'px';
-    heart.style.left = parseFloat(heart.style.left) + sway;
-    sway += (Math.random()*0.3-0.15);
-    if(posY < -50) {
-      posY = window.innerHeight + 50;
-      heart.style.left = Math.random()*(window.innerWidth-50)+"px";
-    }
-    requestAnimationFrame(drift);
-  }
-  drift();
-
-  heart.addEventListener("click", function popHeart() {
-    heart.removeEventListener("click", popHeart);
-    heart.style.animation = "heartPop 0.4s forwards";
-    heartSound.currentTime=0; heartSound.play(); // updated pop sound
-
-    setTimeout(() => {
-      heartsCollected++;
-      counterEl.textContent = `Hearts collected: ${heartsCollected} / ${totalHearts}`;
-      counterEl.style.transform = "scale(1.5)";
-      counterEl.style.transition = "transform 0.2s ease";
-      setTimeout(() => { counterEl.style.transform = "scale(1)"; }, 200);
-
-      heart.remove();
-
-      if(heartsCollected >= totalHearts){
-        envelopeCard.style.display="block";
-        gameCard.style.display="none";
-        document.getElementById("envelope").classList.remove("locked");
-      }
-    }, 400);
-  });
-}
-for(let i=0;i<totalHearts;i++) spawnHeart();
-
-// Envelope
-const envelope = document.getElementById("envelope");
-envelope.addEventListener("click",()=> {
-  if(!envelope.classList.contains("locked")){
-    envelope.style.animation="envelopeOpen 0.6s forwards";
-    setTimeout(()=> {
-      envelopeCard.style.display="none";
-      valentineCard.style.display="block";
-    },600);
-  }
-});
-
-// YES button magical
-const yesBtn=document.getElementById("yesBtn");
-if(yesBtn){
-  yesBtn.classList.add("magical");
-  yesBtn.addEventListener("click",()=> {
-    yesBtn.style.transform="scale(1.3)";
-    yesSound.currentTime=0; yesSound.play();
-    setTimeout(()=>yesBtn.style.transform="scale(1)",300);
-    valentineCard.style.display="none";
-    thankCard.style.display="block";
-  });
-}
-
-// NO button with cat and big jump
-const noBtn=document.getElementById("noBtn");
-if(noBtn){
-  const cat=document.createElement("span");
-  cat.textContent="🐱";
-  cat.style.position="absolute";
-  cat.style.fontSize="36px";
-  cat.style.top="-38px";
-  cat.style.left="50%";
-  cat.style.transform="translateX(-50%)";
-  noBtn.style.position="absolute";
-  noBtn.appendChild(cat);
-
-  let direction=1;
-  setInterval(()=>{
-    const top=parseFloat(cat.style.top.replace("px",""));
-    if(top>-25||top<-45) direction*=-1;
-    cat.style.top=(top+direction*2)+"px";
-  },100);
-
-  document.addEventListener("mousemove",(e)=>{
-    if(valentineCard.style.display==="block"){
-      const rect=noBtn.getBoundingClientRect();
-      const dx=(rect.left + rect.width/2) - e.clientX;
-      const dy=(rect.top + rect.height/2) - e.clientY;
-      const distance=Math.sqrt(dx*dx+dy*dy);
-      if(distance<250){
-        const maxX=valentineCard.offsetWidth-rect.width;
-        const maxY=valentineCard.offsetHeight-rect.height-40;
-        let newX=Math.random()*maxX;
-        let newY=Math.random()*maxY+40;
-        noBtn.style.left = newX + 'px';
-        noBtn.style.top = newY + 'px';
-        noSound.currentTime=0; noSound.play();
-      }
-    }
-  });
-}
+// Set background music start time at 12 seconds
+const bgMusic = document.getElementById("bgMusic");
+bgMusic.currentTime = 12;
+bgMusic.play();
 </script>
 </body>
 </html>
