@@ -33,7 +33,7 @@ body {
 .button-container {
   position:relative;
   width:100%;
-  height:120px; /* Increased for dodging room */
+  height:80px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -59,7 +59,7 @@ body {
   left:30%;
   top:10px;
 }
-.magical {
+#yesBtn.magical, #yesBtnMini.magical {
   animation: yesFloat 2s ease-in-out infinite, glowPulse 2s infinite;
 }
 
@@ -68,18 +68,20 @@ body {
   background:#ffcce0; color:#800040;
   box-shadow:0 5px 10px rgba(0,0,0,0.2);
   z-index:5;
-  left:60%;
+  left:70%;
   top:10px;
 }
 
-/* Glitch effect for NO button */
-@keyframes glitch {
-  0% { text-shadow: 2px 0 #ff0000; transform: translate(0); }
-  20% { text-shadow: -2px 0 #00ffff; transform: translate(-2px, 1px); }
+/* New Glitch Animation */
+@keyframes glitchEffect {
+  0% { text-shadow: 2px 0 red; transform: translate(0); }
+  20% { text-shadow: -2px 0 cyan; transform: translate(-2px, 2px); }
+  40% { text-shadow: 2px 0 red; transform: translate(2px, -2px); }
   100% { text-shadow: 0; transform: translate(0); }
 }
-.glitch-active { animation: glitch 0.2s linear; background: #ff4d94 !important; }
+.glitch { animation: glitchEffect 0.2s infinite; background: #ff4d94 !important; }
 
+/* YES button animations */
 @keyframes yesFloat {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -89,6 +91,15 @@ body {
   0% { box-shadow:0 0 10px #ff8ec7; }
   50% { box-shadow:0 0 20px #b57fff; }
   100% { box-shadow:0 0 10px #ff8ec7; }
+}
+
+/* Proceed button animation */
+@keyframes proceedAnim {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(5deg); }
+  50% { transform: scale(1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 /* Heart collectibles */
@@ -101,12 +112,39 @@ body {
   z-index:3;
   pointer-events:auto;
   padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
+/* Heart pop animation */
 @keyframes heartPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.6); }
   100% { transform: scale(1); opacity:0; }
+}
+
+/* Envelope */
+#envelope {
+  font-size:90px;
+  cursor:pointer;
+  transition: transform 0.5s ease;
+}
+#envelope.locked { filter: grayscale(80%); }
+@keyframes envelopeOpen {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.2) rotate(15deg); }
+  60% { transform: scale(1.1) rotate(-10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Floating emojis */
+.floating-emoji {
+  position:absolute;
+  pointer-events:none;
+  font-size:40px;
+  opacity:0.8;
+  z-index:1;
 }
 
 /* Slideshow */
@@ -123,181 +161,234 @@ body {
 .slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
 
 .slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
-#proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; }
+#proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; animation: proceedAnim 1.2s ease-in-out infinite; }
 </style>
 </head>
 <body>
 
 <div id="slideshow">
-  <div class="slide active"><h1>Hello, Lovely Lady 😍</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Before you continue…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Take a deep breath.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Because what you’re about to read…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>…is very important.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Like… extremely important.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Like… history-changing levels of important.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Okay maybe not history…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>But definitely MY history.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>You look really nice today, by the way.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Anyway…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>You know what’s coming soon, right?</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>The day couples pretend they aren’t broke.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>The day flowers suddenly cost triple.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>The day hearts are everywhere…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Yes, you are right!.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Valentine’s Day.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>And of course…</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>I can’t let that day pass like it’s normal.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Especially when I have someone as special as you.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>A regular question just wouldn’t feel right.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>Because you deserve something more thoughtful.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>So no… this isn’t a challenge.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>You don’t have to earn anything.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide"><h1>You already mean the world to me.</h1><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide26">
-    <p>This mini-game… is just my cute way of asking someone very important to me to spend Valentine’s Day with me.</p>
-    <div class="slide-footer">Click here…</div>
-  </div>
+  <div class="slide active" id="slide1"><p>Hello, Lovely Lady 😍</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide2"><p>Before you continue…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide3"><p>Take a deep breath.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide4"><p>Because what you’re about to read…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide5"><p>…is very important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide6"><p>Like… extremely important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide7"><p>Like… history-changing levels of important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide8"><p>Okay maybe not history…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide9"><p>But definitely MY history.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide10"><p>You look really nice today, by the way.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide11"><p>Anyway…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide12"><p>You know what’s coming soon, right?</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide13"><p>The day couples pretend they aren’t broke.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide14"><p>The day flowers suddenly cost triple.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide15"><p>The day hearts are everywhere…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide16"><p>Yes, you are right!.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide17"><p>Valentine’s Day.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide18"><p>And of course…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide19"><p>I can’t let that day pass like it’s normal.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide20"><p>Especially when I have someone as special as you.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide21"><p>A regular question just wouldn’t feel right.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide22"><p>Because you deserve something more thoughtful.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide23"><p>So no… this isn’t a challenge.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide24"><p>You don’t have to earn anything.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide25"><p>You already mean the world to me.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide26"><p>This mini-game… is just my cute way of asking someone very important to me to spend Valentine’s Day with me.</p><div class="slide-footer">Click here…</div></div>
+  
   <div class="slide" id="slide27">
     <p>So, are you available that day? 😊</p>
     <div class="button-container">
-      <button id="yesBtn" class="magical">YES! 💖</button>
+      <button id="yesBtn">YES! 💖</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-  <div class="slide" id="slide28">
-    <p>Great! Since you’re free, let's play the game! 💖</p>
+
+  <div class="slide" id="slide28"><p>Great! As you’re free that day, please jump into the mini-game 💖</p>
     <button id="proceedToGame">Proceed to Mini-Game</button>
   </div>
 </div>
 
 <div id="floating"></div>
 
-<div class="card" id="gameCard" style="display:none; z-index:20;">
-  <h1>Collect 20 hearts!</h1>
+<div class="card" id="gameCard" style="display:none;">
+  <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
-<div class="card" id="envelopeCard" style="display:none; z-index:20;">
-  <div id="envelope" style="font-size:90px; cursor:pointer;">💌</div>
+<div class="card" id="envelopeCard" style="display:none;">
+  <div id="envelope" class="locked">💌</div>
   <p>Click to open your Valentine!</p>
 </div>
 
-<div class="card" id="valentineCard" style="display:none; z-index:20;">
+<div class="card" id="valentineCard" style="display:none;">
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>-Josh Daz</p>
   <div class="button-container">
-    <button id="yesBtnMini" class="magical">YES! 💖</button>
-    <button id="noBtnMini">NO</button>
+    <button id="yesBtnMini">YES! 💖</button>
+    <button id="noBtnMini">NO </button>
   </div>
 </div>
 
-<div class="card" id="thankCard" style="display:none; z-index:20;">
+<div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! </h1>
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
-<audio id="bgMusic" loop><source src="./mata-sa-mata.mp3" type="audio/mpeg"></audio>
-<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3"></audio>
-<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3"></audio>
+<audio id="bgMusic" src="./mata-sa-mata.mp3" loop></audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
+<audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
+<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
-const slides = document.querySelectorAll(".slide");
-let currentSlide = 0;
-
-// Music logic
 const bgm = document.getElementById("bgMusic");
-function startMusic() {
-  bgm.currentTime = 12;
-  bgm.play().catch(()=>{});
+bgm.volume = 0.4;
+let musicStarted = false;
+function startMusicOnce() {
+  if(!musicStarted){
+    bgm.currentTime = 12;
+    bgm.play().catch(()=>{});
+    musicStarted = true;
+  }
 }
 
-// Progression logic
-document.addEventListener("click", (e) => {
-  if (e.target.tagName === "BUTTON" || e.target.classList.contains("heart")) return;
-  
-  if (currentSlide < 26) { // Progress automatically up to Slide 26
-    startMusic();
-    slides[currentSlide].classList.remove("active");
+const slides = document.querySelectorAll("#slideshow .slide");
+let currentSlide = 0;
+function showSlide(index){
+  slides.forEach(s=>s.classList.remove("active"));
+  slides[index].classList.add("active");
+}
+
+function handleSlideClick(){
+  startMusicOnce();
+  // Prevent auto-click progression on slides with buttons
+  if(currentSlide !== 26 && currentSlide !== 27) {
     currentSlide++;
-    slides[currentSlide].classList.add("active");
+    showSlide(currentSlide);
+  } else if (currentSlide === 26) {
+    currentSlide++;
+    showSlide(currentSlide);
   }
+}
+
+// All slides before buttons
+for(let i=0; i<27; i++){
+  slides[i].addEventListener("click",handleSlideClick);
+}
+
+// Slide 27 YES button
+const yesBtn = document.getElementById("yesBtn");
+yesBtn.classList.add("magical");
+yesBtn.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  currentSlide = 27; // Move to Slide 28
+  showSlide(27);
 });
 
-// YES Button logic
-document.getElementById("yesBtn").onclick = () => {
-  slides[currentSlide].classList.remove("active");
-  currentSlide++;
-  slides[currentSlide].classList.add("active");
-};
+// Dodging Logic for ALL No Buttons
+function makeButtonDodge(btn) {
+  const cat = document.createElement("span");
+  cat.textContent="🐱";
+  cat.style.position="absolute";
+  cat.style.fontSize="36px";
+  cat.style.top="-38px";
+  cat.style.left="50%";
+  cat.style.transform="translateX(-50%)";
+  btn.style.position="absolute";
+  btn.appendChild(cat);
 
-// NO Button Dodging/Glitch logic
-function setupDodge(id) {
-  const btn = document.getElementById(id);
-  btn.addEventListener("mouseover", () => {
-    const container = btn.parentElement;
-    const rect = container.getBoundingClientRect();
-    const newX = Math.random() * (rect.width - btn.offsetWidth);
-    const newY = Math.random() * (rect.height - btn.offsetHeight);
-    
-    btn.style.left = newX + "px";
-    btn.style.top = newY + "px";
-    btn.classList.add("glitch-active");
-    document.getElementById("noSound").play().catch(()=>{});
-    setTimeout(() => btn.classList.remove("glitch-active"), 200);
+  document.addEventListener("mousemove",(e)=>{
+    // Check if the button is currently visible
+    const rect = btn.getBoundingClientRect();
+    if(rect.width > 0) {
+      const dx = (rect.left + rect.width/2) - e.clientX;
+      const dy = (rect.top + rect.height/2) - e.clientY;
+      const distance = Math.sqrt(dx*dx + dy*dy);
+      
+      if(distance < 150){
+        const maxX = window.innerWidth - btn.offsetWidth;
+        const maxY = window.innerHeight - btn.offsetHeight;
+        btn.style.left = Math.random() * maxX + 'px';
+        btn.style.top = Math.random() * maxY + 'px';
+        
+        // Add Glitch
+        btn.classList.add("glitch");
+        document.getElementById("noSound").currentTime = 0;
+        document.getElementById("noSound").play().catch(()=>{});
+        setTimeout(() => btn.classList.remove("glitch"), 200);
+      }
+    }
   });
 }
-setupDodge("noBtn");
-setupDodge("noBtnMini");
 
-// Game Start
-document.getElementById("proceedToGame").onclick = () => {
-  document.getElementById("slideshow").style.display = "none";
-  document.getElementById("gameCard").style.display = "block";
-  for(let i=0; i<20; i++) spawnHeart();
-};
+makeButtonDodge(document.getElementById("noBtn"));
+makeButtonDodge(document.getElementById("noBtnMini"));
 
-let heartsCount = 0;
-function spawnHeart() {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.innerHTML = "💖";
-  h.style.left = Math.random() * 90 + "vw";
-  h.style.top = Math.random() * 90 + "vh";
-  document.body.appendChild(h);
+// Mini-game start
+document.getElementById("proceedToGame").addEventListener("click",()=>{
+  document.getElementById("slideshow").style.display="none";
+  document.getElementById("gameCard").style.display="block";
+});
 
-  h.onclick = () => {
-    heartsCount++;
-    document.getElementById("heartSound").currentTime = 0;
-    document.getElementById("heartSound").play().catch(()=>{});
-    document.getElementById("counter").innerText = `Hearts collected: ${heartsCount} / 20`;
-    h.remove();
-    if (heartsCount === 20) {
-      document.getElementById("gameCard").style.display = "none";
-      document.getElementById("envelopeCard").style.display = "block";
-    }
-  };
+// Heart Game Logic (Exact Copy)
+let heartsCollected=0;
+const totalHearts=20;
+const counterEl=document.getElementById("counter");
+
+function spawnHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.textContent="💖";
+  heart.style.left=Math.random()*(window.innerWidth-50)+"px";
+  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
+  document.body.appendChild(heart);
+
+  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
+  function drift(){
+    posY -= 3;
+    heart.style.top = posY + 'px';
+    heart.style.left = parseFloat(heart.style.left)+sway+'px';
+    if(posY<-50) posY=window.innerHeight+50;
+    requestAnimationFrame(drift);
+  }
+  drift();
+
+  heart.addEventListener("click", function popHeart(){
+    heart.style.animation="heartPop 0.4s forwards";
+    document.getElementById("heartSound").currentTime=0; 
+    document.getElementById("heartSound").play();
+    setTimeout(()=>{
+      heartsCollected++;
+      counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
+      heart.remove();
+      if(heartsCollected>=totalHearts){
+        document.getElementById("envelopeCard").style.display="block";
+        document.getElementById("gameCard").style.display="none";
+        document.getElementById("envelope").classList.remove("locked");
+      }
+    },400);
+  });
 }
+for(let i=0;i<totalHearts;i++) spawnHeart();
 
 document.getElementById("envelope").onclick = () => {
-  document.getElementById("envelopeCard").style.display = "none";
-  document.getElementById("valentineCard").style.display = "block";
+  document.getElementById("envelopeCard").style.display="none";
+  document.getElementById("valentineCard").style.display="block";
 };
 
 document.getElementById("yesBtnMini").onclick = () => {
-  document.getElementById("valentineCard").style.display = "none";
-  document.getElementById("thankCard").style.display = "block";
+  document.getElementById("yesSound").play();
+  document.getElementById("valentineCard").style.display="none";
+  document.getElementById("thankCard").style.display="block";
 };
 
-// Floating Emojis Background
+// Floating emojis background
 const floating = document.getElementById("floating");
-const ems = ['💖','✨','🌸','💌','🐱','🎀'];
-for(let i=0; i<30; i++) {
-  const e = document.createElement('div');
-  e.style.position = 'absolute';
-  e.style.left = Math.random() * 100 + 'vw';
-  e.style.top = Math.random() * 100 + 'vh';
-  e.innerHTML = ems[Math.floor(Math.random()*ems.length)];
+const emojis=['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
+for(let i=0;i<50;i++){
+  const e=document.createElement('div');
+  e.className='floating-emoji';
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left=Math.random()*window.innerWidth+'px';
+  e.style.bottom=Math.random()*window.innerHeight+'px';
   floating.appendChild(e);
 }
 </script>
