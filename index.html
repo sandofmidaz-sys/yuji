@@ -148,6 +148,31 @@ body {
 .slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
 
 .slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
+
+/* Glowing & bouncing effect for Proceed button */
+.glowBounce {
+  animation: glow 1.5s infinite alternate, bounce 0.6s infinite alternate;
+  background: linear-gradient(45deg,#ff8ec7,#b57fff);
+  color:white;
+  border:none;
+  border-radius:15px;
+  padding:10px 20px;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 10px #ff8ec7; }
+  50% { box-shadow: 0 0 20px #b57fff; }
+  100% { box-shadow: 0 0 10px #ff8ec7; }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
 #proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; }
 </style>
 </head>
@@ -155,24 +180,41 @@ body {
 
 <!-- Slideshow -->
 <div id="slideshow">
-  <div class="slide active" id="slide1">
-    <p>Hello, lovely lady 💕</p>
-    <div class="slide-footer">Click here…</div>
-  </div>
-  <div class="slide" id="slide2">
-    <p>You probably know that Valentine’s Day is just around the corner 💝</p>
-    <div class="slide-footer">Click here…</div>
-  </div>
-  <div class="slide" id="slide3">
-    <p>Are you available for that day?</p>
+  <div class="slide active" id="slide1"><p>Hello, Lovely Lady 😍</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide2"><p>Before you continue…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide3"><p>Take a deep breath.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide4"><p>Because what you’re about to read…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide5"><p>…is very important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide6"><p>Like… extremely important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide7"><p>Like… history-changing levels of important.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide8"><p>Okay maybe not history…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide9"><p>But definitely MY history.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide10"><p>You look really nice today, by the way.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide11"><p>Anyway…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide12"><p>You know what’s coming soon, right?</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide13"><p>The day couples pretend they aren’t broke.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide14"><p>The day flowers suddenly cost triple.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide15"><p>The day hearts are everywhere…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide16"><p>Yes, you are right!</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide17"><p>Valentine’s Day.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide18">
+    <p>Are you available that day?</p>
     <div class="button-container">
       <button id="yesBtn">YES! 💖</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-  <div class="slide" id="slide4">
-    <p>Great! As you’re free that day, please jump into the mini-game 💖</p>
-    <button id="proceedToGame">Proceed to Mini-Game</button>
+  <div class="slide" id="slide19"><p>I can’t let that day pass like it’s normal.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide20"><p>Especially when I have someone as special as you.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide21"><p>A regular question just wouldn’t feel right.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide22"><p>Because you deserve something more thoughtful.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide23"><p>So no… this isn’t a challenge.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide24"><p>You don’t have to earn anything.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide25"><p>You already mean the world to me.</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide26"><p>This mini-game…</p><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide27">
+    <p>…is just my way of asking someone very important to me to spend Valentine’s Day with me.</p>
+    <button id="proceedToGame" class="glowBounce">Proceed to Mini-Game</button>
   </div>
 </div>
 
@@ -230,25 +272,24 @@ const slides = document.querySelectorAll("#slideshow .slide");
 let currentSlide = 0;
 function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
 
-// Slide 1 & 2 click anywhere
+// Slide clicks for slides 1–17 & 19–26
 function handleSlideClick() {
     startMusicOnce();
     currentSlide++;
     showSlide(currentSlide);
 }
-slides[0].addEventListener("click", handleSlideClick);
-slides[0].addEventListener("touchstart", handleSlideClick, {passive:true});
-slides[1].addEventListener("click", handleSlideClick);
-slides[1].addEventListener("touchstart", handleSlideClick, {passive:true});
+for(let i=0;i<slides.length;i++){
+  if(i!==17 && i!==26){ // skip yes/no slide (18) and proceed (27)
+    slides[i].addEventListener("click", handleSlideClick);
+    slides[i].addEventListener("touchstart", handleSlideClick, {passive:true});
+  }
+}
 
-// Slide 3 YES/NO buttons (same as mini-game)
+// Slide 18 YES/NO buttons (same as mini-game)
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 yesBtn.classList.add("magical");
-yesBtn.addEventListener("click",()=>{
-  currentSlide++;
-  showSlide(currentSlide);
-});
+yesBtn.addEventListener("click",()=>{ currentSlide++; showSlide(currentSlide); });
 
 // NO button with cat, never leaves screen
 const cat = document.createElement("span");
@@ -263,7 +304,7 @@ noBtn.appendChild(cat);
 const btnWidth = noBtn.offsetWidth;
 const btnHeight = noBtn.offsetHeight;
 document.addEventListener("mousemove",(e)=>{
-  if(currentSlide===2){
+  if(currentSlide===17){
     const rect = noBtn.getBoundingClientRect();
     const dx = (rect.left + rect.width/2) - e.clientX;
     const dy = (rect.top + rect.height/2) - e.clientY;
@@ -279,7 +320,7 @@ document.addEventListener("mousemove",(e)=>{
   }
 });
 
-// Slide 4 proceed button
+// Proceed button on slide 27
 document.getElementById("proceedToGame").addEventListener("click", ()=>{
   document.getElementById("slideshow").style.display="none";
   document.getElementById("gameCard").style.display="block";
@@ -337,6 +378,9 @@ function spawnHeart(){
 
   let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
   function drift(){
+    posY -= 3;
+    heart.style.top = posY + 'px';
+    heart.style.left = parse
     posY -= 3;
     heart.style.top = posY + 'px';
     heart.style.left = parseFloat(heart.style.left) + sway;
@@ -412,7 +456,7 @@ if(noBtnMini){
   noBtnMini.appendChild(cat);
 
   let direction=1;
-  setInterval(()=>{
+  setInterval(()=> {
     const top=parseFloat(cat.style.top.replace("px",""));
     if(top>-25||top<-45) direction*=-1;
     cat.style.top=(top+direction*2)+"px";
