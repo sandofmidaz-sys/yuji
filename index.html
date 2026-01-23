@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine Mini-Game for Camille</title>
+<title>Valentine Mini-Game Upgraded</title>
 <style>
-/* CSS - ALL STYLES GO HERE */
 body {
   margin:0; padding:0;
   font-family:'Comic Sans MS', cursive;
@@ -15,56 +14,65 @@ body {
   position:relative;
 }
 
+/* Card styling */
 .card {
   position:absolute;
   top:50%; left:50%;
   transform: translate(-50%,-50%);
-  width:90%; max-width:480px; padding:30px;
+  width:480px; padding:30px;
   background:#ffe6f0; border-radius:25px;
   box-shadow:0 10px 30px rgba(0,0,0,0.2);
   text-align:center;
-  z-index:10;
-  box-sizing: border-box;
+  z-index:2;
+  transition: transform 0.3s ease;
 }
+.card h1 { font-size:1.6rem; margin-bottom:10px; }
+.card p { font-size:1.2rem; margin-bottom:20px; }
 
+/* Button container */
 .button-container {
   position:relative;
   width:100%;
-  height:120px;
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height:120px; /* Increased for dodging room */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:30px;
 }
 
-button {
+.button-container button {
   font-size:1rem;
-  padding:12px 25px;
+  padding:12px 30px;
   border:none;
   border-radius:18px;
   cursor:pointer;
-  transition: transform 0.2s;
+  position:absolute;
+  transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* YES button */
 #yesBtn, #yesBtnMini {
   background: linear-gradient(45deg,#ff8ec7,#b57fff);
   color:white;
-  z-index: 15;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  z-index:5;
+  left:30%;
+  top:10px;
+}
+.magical {
+  animation: yesFloat 2s ease-in-out infinite, glowPulse 2s infinite;
 }
 
+/* NO button */
 #noBtn, #noBtnMini {
   background:#ffcce0; color:#800040;
-  position: absolute;
+  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+  z-index:5;
+  left:60%;
+  top:10px;
 }
 
-.magical { animation: glowPulse 2s infinite; }
-@keyframes glowPulse {
-  0% { box-shadow:0 0 10px #ff8ec7; }
-  50% { box-shadow:0 0 25px #b57fff; }
-  100% { box-shadow:0 0 10px #ff8ec7; }
-}
-
-/* Glitch Effect */
+/* Glitch effect for NO button */
 @keyframes glitch {
   0% { text-shadow: 2px 0 #ff0000; transform: translate(0); }
   20% { text-shadow: -2px 0 #00ffff; transform: translate(-2px, 1px); }
@@ -72,108 +80,184 @@ button {
 }
 .glitch-active { animation: glitch 0.2s linear; background: #ff4d94 !important; }
 
-#slideshow {
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:inherit; display:flex; justify-content:center; align-items:center;
-  z-index:100; text-align:center;
+@keyframes yesFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
-.slide { display:none; flex-direction:column; align-items:center; width:80%; }
-.slide.active { display:flex; }
-.slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.6; }
+@keyframes glowPulse {
+  0% { box-shadow:0 0 10px #ff8ec7; }
+  50% { box-shadow:0 0 20px #b57fff; }
+  100% { box-shadow:0 0 10px #ff8ec7; }
+}
 
-.heart { position:absolute; font-size:40px; cursor:pointer; z-index:5; }
+/* Heart collectibles */
+.heart {
+  position:absolute;
+  font-size:40px;
+  cursor:pointer;
+  user-select:none;
+  transition: transform 0.2s ease;
+  z-index:3;
+  pointer-events:auto;
+  padding:10px;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.6); }
+  100% { transform: scale(1); opacity:0; }
+}
+
+/* Slideshow */
+#slideshow {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  background:linear-gradient(135deg, #ffdee9, #b5fffc, #fddde6);
+  display:flex; justify-content:center; align-items:center;
+  text-align:center; font-size:2rem; color:#800040;
+  z-index:10;
+  flex-direction:column;
+}
+
+.slide { display:none; opacity:0; transition: opacity 0.6s ease; }
+.slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
+
+.slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
+#proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; }
 </style>
 </head>
 <body>
 
 <div id="slideshow">
-  <div class="slide active"><h1>Hello, Lovely Lady 😍</h1><div class="slide-footer">Tap anywhere...</div></div>
-  <div class="slide"><h1>This mini-game is just my way of asking someone special to spend Valentine’s with me...</h1><div class="slide-footer">Tap anywhere...</div></div>
-  
-  <div class="slide" id="questionSlide">
-    <h1>So, are you available that day? 😊</h1>
+  <div class="slide active"><h1>Hello, Lovely Lady 😍</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Before you continue…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Take a deep breath.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Because what you’re about to read…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>…is very important.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Like… extremely important.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Like… history-changing levels of important.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Okay maybe not history…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>But definitely MY history.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>You look really nice today, by the way.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Anyway…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>You know what’s coming soon, right?</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>The day couples pretend they aren’t broke.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>The day flowers suddenly cost triple.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>The day hearts are everywhere…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Yes, you are right!.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Valentine’s Day.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>And of course…</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>I can’t let that day pass like it’s normal.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Especially when I have someone as special as you.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>A regular question just wouldn’t feel right.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>Because you deserve something more thoughtful.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>So no… this isn’t a challenge.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>You don’t have to earn anything.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide"><h1>You already mean the world to me.</h1><div class="slide-footer">Click here…</div></div>
+  <div class="slide" id="slide26">
+    <p>This mini-game… is just my cute way of asking someone very important to me to spend Valentine’s Day with me.</p>
+    <div class="slide-footer">Click here…</div>
+  </div>
+  <div class="slide" id="slide27">
+    <p>So, are you available that day? 😊</p>
     <div class="button-container">
       <button id="yesBtn" class="magical">YES! 💖</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-
-  <div class="slide" id="readySlide">
-    <h1>Great! Since you're free, let's play a game 💖</h1>
-    <button id="startBtn" style="background:#ff8ec7; color:white; margin-top:20px;">Start Game</button>
+  <div class="slide" id="slide28">
+    <p>Great! Since you’re free, let's play the game! 💖</p>
+    <button id="proceedToGame">Proceed to Mini-Game</button>
   </div>
 </div>
 
-<div class="card" id="gameCard" style="display:none;">
+<div id="floating"></div>
+
+<div class="card" id="gameCard" style="display:none; z-index:20;">
   <h1>Collect 20 hearts!</h1>
-  <div id="counter">Hearts: 0 / 20</div>
+  <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
-<div class="card" id="envelopeCard" style="display:none;">
-  <div id="envelope" style="font-size:80px; cursor:pointer;">💌</div>
-  <p>Open your message!</p>
+<div class="card" id="envelopeCard" style="display:none; z-index:20;">
+  <div id="envelope" style="font-size:90px; cursor:pointer;">💌</div>
+  <p>Click to open your Valentine!</p>
 </div>
 
-<div class="card" id="valentineCard" style="display:none;">
-  <h1>💕 Camille, will you be my Valentine?</h1>
-  <p>- Josh Daz</p>
+<div class="card" id="valentineCard" style="display:none; z-index:20;">
+  <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
+  <p>-Josh Daz</p>
   <div class="button-container">
     <button id="yesBtnMini" class="magical">YES! 💖</button>
     <button id="noBtnMini">NO</button>
   </div>
 </div>
 
-<div class="card" id="thankCard" style="display:none;">
-  <h1>Yay! See you then! 🥰</h1>
+<div class="card" id="thankCard" style="display:none; z-index:20;">
+  <h1>Thank you so much! </h1>
+  <p>I promise you won’t regret it. 💖</p>
 </div>
 
+<audio id="bgMusic" loop><source src="./mata-sa-mata.mp3" type="audio/mpeg"></audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3"></audio>
+<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3"></audio>
+
 <script>
-/* JAVASCRIPT - ALL LOGIC GOES HERE */
 const slides = document.querySelectorAll(".slide");
 let currentSlide = 0;
 
-// Progress through text slides
+// Music logic
+const bgm = document.getElementById("bgMusic");
+function startMusic() {
+  bgm.currentTime = 12;
+  bgm.play().catch(()=>{});
+}
+
+// Progression logic
 document.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON" || e.target.classList.contains("heart")) return;
-  if (currentSlide < 2) { 
+  
+  if (currentSlide < 26) { // Progress automatically up to Slide 26
+    startMusic();
     slides[currentSlide].classList.remove("active");
     currentSlide++;
     slides[currentSlide].classList.add("active");
   }
 });
 
-// Dodging Logic Function
-function setupDodge(btnId) {
-  const btn = document.getElementById(btnId);
-  btn.addEventListener("mouseover", () => {
-    const container = btn.parentElement;
-    const maxX = container.clientWidth - btn.clientWidth;
-    const maxY = container.clientHeight - btn.clientHeight;
-    
-    btn.style.left = Math.random() * maxX + "px";
-    btn.style.top = Math.random() * maxY + "px";
-    btn.classList.add("glitch-active");
-    setTimeout(() => btn.classList.remove("glitch-active"), 200);
-  });
-}
-
-setupDodge("noBtn");
-setupDodge("noBtnMini");
-
-// Button Actions
+// YES Button logic
 document.getElementById("yesBtn").onclick = () => {
   slides[currentSlide].classList.remove("active");
   currentSlide++;
   slides[currentSlide].classList.add("active");
 };
 
-document.getElementById("startBtn").onclick = () => {
+// NO Button Dodging/Glitch logic
+function setupDodge(id) {
+  const btn = document.getElementById(id);
+  btn.addEventListener("mouseover", () => {
+    const container = btn.parentElement;
+    const rect = container.getBoundingClientRect();
+    const newX = Math.random() * (rect.width - btn.offsetWidth);
+    const newY = Math.random() * (rect.height - btn.offsetHeight);
+    
+    btn.style.left = newX + "px";
+    btn.style.top = newY + "px";
+    btn.classList.add("glitch-active");
+    document.getElementById("noSound").play().catch(()=>{});
+    setTimeout(() => btn.classList.remove("glitch-active"), 200);
+  });
+}
+setupDodge("noBtn");
+setupDodge("noBtnMini");
+
+// Game Start
+document.getElementById("proceedToGame").onclick = () => {
   document.getElementById("slideshow").style.display = "none";
   document.getElementById("gameCard").style.display = "block";
   for(let i=0; i<20; i++) spawnHeart();
 };
 
-let hearts = 0;
+let heartsCount = 0;
 function spawnHeart() {
   const h = document.createElement("div");
   h.className = "heart";
@@ -183,10 +267,12 @@ function spawnHeart() {
   document.body.appendChild(h);
 
   h.onclick = () => {
-    hearts++;
-    document.getElementById("counter").innerText = `Hearts: ${hearts} / 20`;
+    heartsCount++;
+    document.getElementById("heartSound").currentTime = 0;
+    document.getElementById("heartSound").play().catch(()=>{});
+    document.getElementById("counter").innerText = `Hearts collected: ${heartsCount} / 20`;
     h.remove();
-    if (hearts === 20) {
+    if (heartsCount === 20) {
       document.getElementById("gameCard").style.display = "none";
       document.getElementById("envelopeCard").style.display = "block";
     }
@@ -202,6 +288,18 @@ document.getElementById("yesBtnMini").onclick = () => {
   document.getElementById("valentineCard").style.display = "none";
   document.getElementById("thankCard").style.display = "block";
 };
+
+// Floating Emojis Background
+const floating = document.getElementById("floating");
+const ems = ['💖','✨','🌸','💌','🐱','🎀'];
+for(let i=0; i<30; i++) {
+  const e = document.createElement('div');
+  e.style.position = 'absolute';
+  e.style.left = Math.random() * 100 + 'vw';
+  e.style.top = Math.random() * 100 + 'vh';
+  e.innerHTML = ems[Math.floor(Math.random()*ems.length)];
+  floating.appendChild(e);
+}
 </script>
 </body>
 </html>
