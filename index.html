@@ -29,7 +29,6 @@ body {
 .card h1 { font-size:1.6rem; margin-bottom:10px; }
 .card p { font-size:1.2rem; margin-bottom:20px; }
 
-/* Button container */
 .button-container {
   position:relative;
   width:100%;
@@ -50,7 +49,6 @@ body {
   transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* YES button */
 #yesBtn {
   background: linear-gradient(45deg,#ff8ec7,#b57fff);
   color:white;
@@ -63,7 +61,6 @@ body {
   animation: yesFloat 2s ease-in-out infinite, glowPulse 2s infinite;
 }
 
-/* NO button */
 #noBtn {
   background:#ffcce0; color:#800040;
   box-shadow:0 5px 10px rgba(0,0,0,0.2);
@@ -72,7 +69,6 @@ body {
   top:10px;
 }
 
-/* YES button animations */
 @keyframes yesFloat {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -84,7 +80,6 @@ body {
   100% { box-shadow:0 0 10px #ff8ec7; }
 }
 
-/* Heart collectibles */
 .heart {
   position:absolute;
   font-size:40px;
@@ -99,14 +94,12 @@ body {
   justify-content:center;
 }
 
-/* Heart pop animation */
 @keyframes heartPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.6); }
   100% { transform: scale(1); opacity:0; }
 }
 
-/* Envelope */
 #envelope {
   font-size:90px;
   cursor:pointer;
@@ -120,7 +113,6 @@ body {
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* Floating emojis */
 .floating-emoji {
   position:absolute;
   pointer-events:none;
@@ -129,7 +121,6 @@ body {
   z-index:1;
 }
 
-/* Cards glow */
 .card:hover {
   box-shadow:0 15px 35px rgba(0,0,0,0.3);
 }
@@ -139,19 +130,16 @@ body {
 
 <div id="floating"></div>
 
-<!-- Mini-game -->
 <div class="card" id="gameCard">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
-<!-- Envelope -->
 <div class="card" id="envelopeCard" style="display:none;">
   <div id="envelope" class="locked">💌</div>
   <p>Click to open your Valentine!</p>
 </div>
 
-<!-- Valentine message -->
 <div class="card" id="valentineCard" style="display:none;">
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>-Josh Daz</p>
@@ -161,19 +149,39 @@ body {
   </div>
 </div>
 
-<!-- Thank you card -->
 <div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! 🎀</h1>
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
-<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio> <!-- updated pop sound -->
+<audio id="bgMusic" loop>
+  <source src="mata-sa-mata.mp3" type="audio/mpeg">
+</audio>
+<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
+const bgm = document.getElementById("bgMusic");
+
+bgm.volume = 0.4;
+
+bgm.addEventListener("loadedmetadata", () => {
+  bgm.currentTime = 12;
+});
+
+window.addEventListener("load", () => {
+  const playPromise = bgm.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      document.addEventListener("click", () => {
+        bgm.play();
+      }, { once: true });
+    });
+  }
+});
+
 // Floating emojis
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
@@ -241,7 +249,7 @@ function spawnHeart(){
   heart.addEventListener("click", function popHeart() {
     heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
-    heartSound.currentTime=0; heartSound.play(); // updated pop sound
+    heartSound.currentTime=0; heartSound.play();
 
     setTimeout(() => {
       heartsCollected++;
@@ -262,7 +270,6 @@ function spawnHeart(){
 }
 for(let i=0;i<totalHearts;i++) spawnHeart();
 
-// Envelope
 const envelope = document.getElementById("envelope");
 envelope.addEventListener("click",()=> {
   if(!envelope.classList.contains("locked")){
@@ -274,7 +281,6 @@ envelope.addEventListener("click",()=> {
   }
 });
 
-// YES button magical
 const yesBtn=document.getElementById("yesBtn");
 if(yesBtn){
   yesBtn.classList.add("magical");
@@ -287,7 +293,6 @@ if(yesBtn){
   });
 }
 
-// NO button with cat and big jump
 const noBtn=document.getElementById("noBtn");
 if(noBtn){
   const cat=document.createElement("span");
