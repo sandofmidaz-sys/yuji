@@ -98,7 +98,6 @@ body {
   align-items:center;
   justify-content:center;
 }
-
 @keyframes heartPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.6); }
@@ -137,10 +136,8 @@ body {
   z-index:10;
   flex-direction:column;
 }
-
 .slide { display:none; opacity:0; transition: opacity 0.6s ease; }
 .slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
-
 .slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
 
 #proceedToGame {
@@ -160,7 +157,6 @@ body {
 
 <!-- Slideshow -->
 <div id="slideshow">
-
   <!-- Slides 1–17 & 19–25 -->
   <div class="slide active"><p>Hello, Lovely Lady 😍</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Before you continue…</p><div class="slide-footer">Click here…</div></div>
@@ -189,6 +185,7 @@ body {
     </div>
   </div>
 
+  <!-- Slides 19–25 -->
   <div class="slide"><p>I can’t let that day pass like it’s normal.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Especially when I have someone as special as you.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>A regular question just wouldn’t feel right.</p><div class="slide-footer">Click here…</div></div>
@@ -279,7 +276,7 @@ yesBtn.addEventListener("click", ()=>{
   showSlide(currentSlide);
 });
 
-// NO button cat dodge
+// NO button cat + dodging
 const cat = document.createElement("span");
 cat.textContent="🐱";
 cat.style.position="absolute";
@@ -300,15 +297,15 @@ document.addEventListener("mousemove",(e)=>{
     if(distance < 250){
       const maxX = window.innerWidth - btnWidth;
       const maxY = window.innerHeight - btnHeight;
-      let newX = Math.random() * maxX;
-      let newY = Math.random() * maxY;
-      noBtn.style.left = newX + 'px';
-      noBtn.style.top = newY + 'px';
+      noBtn.style.left = Math.random() * maxX + 'px';
+      noBtn.style.top = Math.random() * maxY + 'px';
+      document.getElementById("noSound").currentTime=0;
+      document.getElementById("noSound").play();
     }
   }
 });
 
-// Proceed to mini-game (slide 26)
+// Slide 26 proceed
 document.getElementById("proceedToGame").addEventListener("click", ()=>{
   document.getElementById("slideshow").style.display="none";
   document.getElementById("gameCard").style.display="block";
@@ -421,18 +418,48 @@ if(yesBtnMini){
   yesBtnMini.addEventListener("click",()=> {
     yesBtnMini.style.transform="scale(1.3)";
     yesSound.currentTime=0; yesSound.play();
-    setTimeout(()=>{
-      valentineCard.style.display="none";
-      thankCard.style.display="block";
-    },400);
+    setTimeout(()=>yesBtnMini.style.transform="scale(1)",300);
+    valentineCard.style.display="none";
+    thankCard.style.display="block";
   });
 }
 
-// NO button mini-game
+// NO button mini-game: restore cat + dodging
 const noBtnMini=document.getElementById("noBtnMini");
 if(noBtnMini){
-  noBtnMini.addEventListener("click",()=>{
-    noSound.currentTime=0; noSound.play();
+  const cat=document.createElement("span");
+  cat.textContent="🐱";
+  cat.style.position="absolute";
+  cat.style.fontSize="36px";
+  cat.style.top="-38px";
+  cat.style.left="50%";
+  cat.style.transform="translateX(-50%)";
+  noBtnMini.style.position="absolute";
+  noBtnMini.appendChild(cat);
+
+  let direction=1;
+  setInterval(()=>{
+    const top=parseFloat(cat.style.top.replace("px",""));
+    if(top>-25||top<-45) direction*=-1;
+    cat.style.top=(top+direction*2)+"px";
+  },100);
+
+  document.addEventListener("mousemove",(e)=>{
+    if(valentineCard.style.display==="block"){
+      const rect=noBtnMini.getBoundingClientRect();
+      const dx=(rect.left + rect.width/2) - e.clientX;
+      const dy=(rect.top + rect.height/2) - e.clientY;
+      const distance=Math.sqrt(dx*dx+dy*dy);
+      if(distance<250){
+        const maxX=valentineCard.offsetWidth-rect.width;
+        const maxY=valentineCard.offsetHeight-rect.height-40;
+        let newX=Math.random()*maxX;
+        let newY=Math.random()*maxY+40;
+        noBtnMini.style.left = newX + 'px';
+        noBtnMini.style.top = newY + 'px';
+        noSound.currentTime=0; noSound.play();
+      }
+    }
   });
 }
 </script>
