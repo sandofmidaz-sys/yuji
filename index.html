@@ -163,23 +163,27 @@ body {
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
+// ✅ NEW BACKGROUND MUSIC SYSTEM
 const bgm = document.getElementById("bgMusic");
-
 bgm.volume = 0.4;
 
 bgm.addEventListener("loadedmetadata", () => {
   bgm.currentTime = 12;
 });
 
+function startMusic() {
+  bgm.play().catch(()=>{});
+  document.removeEventListener("click", startMusic);
+  document.removeEventListener("touchstart", startMusic);
+  document.removeEventListener("keydown", startMusic);
+}
+
 window.addEventListener("load", () => {
-  const playPromise = bgm.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      document.addEventListener("click", () => {
-        bgm.play();
-      }, { once: true });
-    });
-  }
+  bgm.play().catch(() => {
+    document.addEventListener("click", startMusic);
+    document.addEventListener("touchstart", startMusic);
+    document.addEventListener("keydown", startMusic);
+  });
 });
 
 // Floating emojis
@@ -211,7 +215,7 @@ for(let i=0;i<totalFloating;i++){
   drift();
 }
 
-// Mini-game
+// Mini-game (unchanged)
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
