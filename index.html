@@ -72,14 +72,13 @@ body {
   top:10px;
 }
 
-/* New Glitch Animation */
-@keyframes glitchEffect {
-  0% { text-shadow: 2px 0 red; transform: translate(0); }
-  20% { text-shadow: -2px 0 cyan; transform: translate(-2px, 2px); }
-  40% { text-shadow: 2px 0 red; transform: translate(2px, -2px); }
+/* Glitch Animation */
+@keyframes glitch {
+  0% { text-shadow: 2px 0 #ff0000; transform: translate(0); }
+  20% { text-shadow: -2px 0 #00ffff; transform: translate(-2px, 1px); }
   100% { text-shadow: 0; transform: translate(0); }
 }
-.glitch { animation: glitchEffect 0.2s infinite; background: #ff4d94 !important; }
+.glitch-active { animation: glitch 0.2s linear; background: #ff4d94 !important; }
 
 /* YES button animations */
 @keyframes yesFloat {
@@ -115,6 +114,7 @@ body {
   display:flex;
   align-items:center;
   justify-content:center;
+  opacity: 1 !important; 
 }
 
 /* Heart pop animation */
@@ -131,19 +131,13 @@ body {
   transition: transform 0.5s ease;
 }
 #envelope.locked { filter: grayscale(80%); }
-@keyframes envelopeOpen {
-  0% { transform: scale(1) rotate(0deg); }
-  30% { transform: scale(1.2) rotate(15deg); }
-  60% { transform: scale(1.1) rotate(-10deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
 
 /* Floating emojis */
 .floating-emoji {
   position:absolute;
   pointer-events:none;
   font-size:40px;
-  opacity:0.8;
+  opacity:0.9;
   z-index:1;
 }
 
@@ -193,15 +187,12 @@ body {
   <div class="slide" id="slide24"><p>You don’t have to earn anything.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide" id="slide25"><p>You already mean the world to me.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide" id="slide26"><p>This mini-game… is just my cute way of asking someone very important to me to spend Valentine’s Day with me.</p><div class="slide-footer">Click here…</div></div>
-  
-  <div class="slide" id="slide27">
-    <p>So, are you available that day? 😊</p>
+  <div class="slide" id="slide27"><p>So, are you available that day? 😊</p>
     <div class="button-container">
       <button id="yesBtn">YES! 💖</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-
   <div class="slide" id="slide28"><p>Great! As you’re free that day, please jump into the mini-game 💖</p>
     <button id="proceedToGame">Proceed to Mini-Game</button>
   </div>
@@ -230,7 +221,6 @@ body {
 
 <div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! </h1>
-  <p>I promise you won’t regret it. 💖</p>
 </div>
 
 <audio id="bgMusic" src="./mata-sa-mata.mp3" loop></audio>
@@ -259,32 +249,22 @@ function showSlide(index){
 
 function handleSlideClick(){
   startMusicOnce();
-  // Prevent auto-click progression on slides with buttons
-  if(currentSlide !== 26 && currentSlide !== 27) {
-    currentSlide++;
-    showSlide(currentSlide);
-  } else if (currentSlide === 26) {
+  if(currentSlide < 26) {
     currentSlide++;
     showSlide(currentSlide);
   }
 }
 
-// All slides before buttons
-for(let i=0; i<27; i++){
+for(let i=0;i<27;i++){
   slides[i].addEventListener("click",handleSlideClick);
 }
 
-// Slide 27 YES button
-const yesBtn = document.getElementById("yesBtn");
-yesBtn.classList.add("magical");
-yesBtn.addEventListener("click", (e)=>{
-  e.stopPropagation();
-  currentSlide = 27; // Move to Slide 28
-  showSlide(27);
-});
+document.getElementById("yesBtn").onclick = () => {
+  currentSlide = 27;
+  showSlide(currentSlide);
+};
 
-// Dodging Logic for ALL No Buttons
-function makeButtonDodge(btn) {
+function setupDodge(btn) {
   const cat = document.createElement("span");
   cat.textContent="🐱";
   cat.style.position="absolute";
@@ -296,68 +276,79 @@ function makeButtonDodge(btn) {
   btn.appendChild(cat);
 
   document.addEventListener("mousemove",(e)=>{
-    // Check if the button is currently visible
-    const rect = btn.getBoundingClientRect();
+    const rect=btn.getBoundingClientRect();
     if(rect.width > 0) {
-      const dx = (rect.left + rect.width/2) - e.clientX;
-      const dy = (rect.top + rect.height/2) - e.clientY;
-      const distance = Math.sqrt(dx*dx + dy*dy);
-      
-      if(distance < 150){
-        const maxX = window.innerWidth - btn.offsetWidth;
-        const maxY = window.innerHeight - btn.offsetHeight;
-        btn.style.left = Math.random() * maxX + 'px';
-        btn.style.top = Math.random() * maxY + 'px';
-        
-        // Add Glitch
-        btn.classList.add("glitch");
-        document.getElementById("noSound").currentTime = 0;
-        document.getElementById("noSound").play().catch(()=>{});
-        setTimeout(() => btn.classList.remove("glitch"), 200);
-      }
+        const dx=(rect.left+rect.width/2)-e.clientX;
+        const dy=(rect.top+rect.height/2)-e.clientY;
+        const distance=Math.sqrt(dx*dx+dy*dy);
+        if(distance<200){
+          btn.style.left=Math.random()*(window.innerWidth-btn.offsetWidth)+'px';
+          btn.style.top=Math.random()*(window.innerHeight-btn.offsetHeight)+'px';
+          btn.classList.add("glitch-active");
+          document.getElementById("noSound").currentTime=0;
+          document.getElementById("noSound").play().catch(()=>{});
+          setTimeout(() => btn.classList.remove("glitch-active"), 200);
+        }
     }
   });
 }
 
-makeButtonDodge(document.getElementById("noBtn"));
-makeButtonDodge(document.getElementById("noBtnMini"));
+setupDodge(document.getElementById("noBtn"));
+setupDodge(document.getElementById("noBtnMini"));
 
-// Mini-game start
 document.getElementById("proceedToGame").addEventListener("click",()=>{
   document.getElementById("slideshow").style.display="none";
   document.getElementById("gameCard").style.display="block";
 });
 
-// Heart Game Logic (Exact Copy)
+// FLOATING EMOJIS ( increased count to 100 )
+const floating = document.getElementById("floating");
+const emojis=['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
+for(let i=0;i<100;i++){
+  const e=document.createElement('div');
+  e.className='floating-emoji';
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left=Math.random()*window.innerWidth+'px';
+  e.style.bottom=Math.random()*window.innerHeight+'px';
+  floating.appendChild(e);
+
+  let posY=parseFloat(e.style.bottom);
+  function drift(){
+    posY += 1.5;
+    e.style.bottom = posY+'px';
+    if(posY>window.innerHeight+50) posY=-50;
+    requestAnimationFrame(drift);
+  }
+  drift();
+}
+
 let heartsCollected=0;
 const totalHearts=20;
-const counterEl=document.getElementById("counter");
 
 function spawnHeart(){
   const heart=document.createElement("div");
   heart.className="heart";
   heart.textContent="💖";
   heart.style.left=Math.random()*(window.innerWidth-50)+"px";
-  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
+  heart.style.top=window.innerHeight + 50 + "px";
   document.body.appendChild(heart);
 
-  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
-  function drift(){
-    posY -= 3;
+  let posY=window.innerHeight + 50;
+  function driftHeart(){
+    posY -= 2.5;
     heart.style.top = posY + 'px';
-    heart.style.left = parseFloat(heart.style.left)+sway+'px';
-    if(posY<-50) posY=window.innerHeight+50;
-    requestAnimationFrame(drift);
+    if(posY<-100) posY=window.innerHeight+100; 
+    if(heart.parentElement) requestAnimationFrame(driftHeart);
   }
-  drift();
+  driftHeart();
 
-  heart.addEventListener("click", function popHeart(){
+  heart.addEventListener("click", function(){
     heart.style.animation="heartPop 0.4s forwards";
     document.getElementById("heartSound").currentTime=0; 
     document.getElementById("heartSound").play();
     setTimeout(()=>{
       heartsCollected++;
-      counterEl.textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
+      document.getElementById("counter").textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
       heart.remove();
       if(heartsCollected>=totalHearts){
         document.getElementById("envelopeCard").style.display="block";
@@ -367,11 +358,13 @@ function spawnHeart(){
     },400);
   });
 }
-for(let i=0;i<totalHearts;i++) spawnHeart();
+for(let i=0;i<35;i++) spawnHeart(); // Extra hearts
 
 document.getElementById("envelope").onclick = () => {
-  document.getElementById("envelopeCard").style.display="none";
-  document.getElementById("valentineCard").style.display="block";
+    if(!document.getElementById("envelope").classList.contains("locked")){
+        document.getElementById("envelopeCard").style.display="none";
+        document.getElementById("valentineCard").style.display="block";
+    }
 };
 
 document.getElementById("yesBtnMini").onclick = () => {
@@ -379,18 +372,6 @@ document.getElementById("yesBtnMini").onclick = () => {
   document.getElementById("valentineCard").style.display="none";
   document.getElementById("thankCard").style.display="block";
 };
-
-// Floating emojis background
-const floating = document.getElementById("floating");
-const emojis=['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-for(let i=0;i<50;i++){
-  const e=document.createElement('div');
-  e.className='floating-emoji';
-  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-  e.style.left=Math.random()*window.innerWidth+'px';
-  e.style.bottom=Math.random()*window.innerHeight+'px';
-  floating.appendChild(e);
-}
 </script>
 </body>
 </html>
