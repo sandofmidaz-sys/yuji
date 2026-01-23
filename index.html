@@ -49,6 +49,7 @@ body {
   transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* YES button */
 #yesBtn {
   background: linear-gradient(45deg,#ff8ec7,#b57fff);
   color:white;
@@ -61,6 +62,7 @@ body {
   animation: yesFloat 2s ease-in-out infinite, glowPulse 2s infinite;
 }
 
+/* NO button */
 #noBtn {
   background:#ffcce0; color:#800040;
   box-shadow:0 5px 10px rgba(0,0,0,0.2);
@@ -69,6 +71,7 @@ body {
   top:10px;
 }
 
+/* YES button animations */
 @keyframes yesFloat {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -80,6 +83,7 @@ body {
   100% { box-shadow:0 0 10px #ff8ec7; }
 }
 
+/* Heart collectibles */
 .heart {
   position:absolute;
   font-size:40px;
@@ -94,12 +98,14 @@ body {
   justify-content:center;
 }
 
+/* Heart pop animation */
 @keyframes heartPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.6); }
   100% { transform: scale(1); opacity:0; }
 }
 
+/* Envelope */
 #envelope {
   font-size:90px;
   cursor:pointer;
@@ -113,6 +119,7 @@ body {
   100% { transform: scale(1) rotate(0deg); }
 }
 
+/* Floating emojis */
 .floating-emoji {
   position:absolute;
   pointer-events:none;
@@ -121,6 +128,7 @@ body {
   z-index:1;
 }
 
+/* Cards glow */
 .card:hover {
   box-shadow:0 15px 35px rgba(0,0,0,0.3);
 }
@@ -136,16 +144,9 @@ body {
 }
 
 .slide { display:none; opacity:0; transition: opacity 0.6s ease; }
-.slide.active { display:block; opacity:1; }
+.slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
 
-#slideshow button {
-  padding:12px 30px; border:none; border-radius:18px;
-  background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white;
-  font-size:1.2rem; cursor:pointer;
-  margin-top:20px;
-}
-
-.slide .button-container { display:flex; justify-content:center; gap:20px; margin-top:20px; }
+.slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
 </style>
 </head>
 <body>
@@ -153,16 +154,19 @@ body {
 <!-- Slideshow -->
 <div id="slideshow">
   <div class="slide active" id="slide1">
-    <p>Hello, lovely lady 💕<br>Click the screen to proceed</p>
+    <p>Hello, lovely lady 💕</p>
+    <div class="slide-footer">Click to continue…</div>
   </div>
   <div class="slide" id="slide2">
-    <p>You probably know that Valentine’s Day is just around the corner 💝<br>Click the screen to proceed</p>
+    <p>You probably know that Valentine’s Day is just around the corner 💝</p>
+    <div class="slide-footer">Click to continue…</div>
   </div>
   <div class="slide" id="slide3">
     <p>Are you available for that day?</p>
+    <!-- Use same mini-game buttons -->
     <div class="button-container">
-      <button id="yesAvailability">YES</button>
-      <button id="noAvailability">NO</button>
+      <button id="yesBtn">YES! 💖</button>
+      <button id="noBtn">NO 🙃</button>
     </div>
   </div>
   <div class="slide" id="slide4">
@@ -190,8 +194,8 @@ body {
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>-Josh Daz</p>
   <div class="button-container">
-    <button id="yesBtn">YES! 💖</button>
-    <button id="noBtn">NO 🙃</button>
+    <button id="yesBtnMini">YES! 💖</button>
+    <button id="noBtnMini">NO 🙃</button>
   </div>
 </div>
 
@@ -214,52 +218,76 @@ body {
 const bgm = document.getElementById("bgMusic");
 bgm.volume = 0.4;
 bgm.addEventListener("loadedmetadata", () => { bgm.currentTime = 12; });
-function startMusic() {
-  bgm.play().catch(()=>{});
-  document.removeEventListener("click", startMusic);
-  document.removeEventListener("touchstart", startMusic);
-  document.removeEventListener("keydown", startMusic);
+
+// First click anywhere starts music
+let musicStarted = false;
+function startMusicOnce() {
+  if(!musicStarted){
+    bgm.play().catch(()=>{});
+    musicStarted = true;
+  }
 }
-window.addEventListener("load", () => {
-  bgm.play().catch(() => {
-    document.addEventListener("click", startMusic);
-    document.addEventListener("touchstart", startMusic);
-    document.addEventListener("keydown", startMusic);
-  });
-});
 
 // Slideshow logic
 const slides = document.querySelectorAll("#slideshow .slide");
 let currentSlide = 0;
-
 function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
 
-// Slide 1 & 2: click anywhere to proceed
-document.getElementById("slide1").addEventListener("click",()=> { currentSlide++; showSlide(currentSlide); });
-document.getElementById("slide2").addEventListener("click",()=> { currentSlide++; showSlide(currentSlide); });
+// Slide 1 & 2 click anywhere
+slides[0].addEventListener("click", () => { startMusicOnce(); currentSlide++; showSlide(currentSlide); });
+slides[1].addEventListener("click", () => { currentSlide++; showSlide(currentSlide); });
 
-// Slide 3 – YES/NO buttons
-const yesAvailability = document.getElementById("yesAvailability");
-const noAvailability = document.getElementById("noAvailability");
+// Slide 3 – use mini-game YES/NO
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const noSound = document.getElementById("noSound");
+const yesSound = document.getElementById("yesSound");
 
-yesAvailability.addEventListener("click", () => { currentSlide++; showSlide(currentSlide); });
+yesBtn.classList.add("magical");
+yesBtn.addEventListener("click",()=>{
+  yesBtn.style.transform="scale(1.3)";
+  yesSound.currentTime=0; yesSound.play();
+  setTimeout(()=>yesBtn.style.transform="scale(1)",300);
+  currentSlide++; showSlide(currentSlide);
+});
 
-// NO button dodges
-noAvailability.addEventListener("mousemove", (e)=>{
-  const rect = noAvailability.getBoundingClientRect();
-  const dx = rect.left + rect.width/2 - e.clientX;
-  const dy = rect.top + rect.height/2 - e.clientY;
-  const distance = Math.sqrt(dx*dx + dy*dy);
-  if(distance < 150){
-    const maxX = window.innerWidth - rect.width;
-    const maxY = window.innerHeight - rect.height;
-    noAvailability.style.position = "absolute";
-    noAvailability.style.left = Math.random()*maxX + "px";
-    noAvailability.style.top = Math.random()*maxY + "px";
+// NO button dodging
+const cat = document.createElement("span");
+cat.textContent="🐱";
+cat.style.position="absolute";
+cat.style.fontSize="36px";
+cat.style.top="-38px";
+cat.style.left="50%";
+cat.style.transform="translateX(-50%)";
+noBtn.style.position="absolute";
+noBtn.appendChild(cat);
+
+let direction=1;
+setInterval(()=>{
+  const top=parseFloat(cat.style.top.replace("px",""));
+  if(top>-25||top<-45) direction*=-1;
+  cat.style.top=(top+direction*2)+"px";
+},100);
+
+document.addEventListener("mousemove",(e)=>{
+  if(currentSlide===2){
+    const rect=noBtn.getBoundingClientRect();
+    const dx=(rect.left + rect.width/2) - e.clientX;
+    const dy=(rect.top + rect.height/2) - e.clientY;
+    const distance=Math.sqrt(dx*dx+dy*dy);
+    if(distance<250){
+      const maxX=window.innerWidth-rect.width;
+      const maxY=window.innerHeight-rect.height;
+      let newX=Math.random()*maxX;
+      let newY=Math.random()*maxY;
+      noBtn.style.left = newX + 'px';
+      noBtn.style.top = newY + 'px';
+      noSound.currentTime=0; noSound.play();
+    }
   }
 });
 
-// Slide 4 – proceed to mini-game
+// Slide 4 proceed button
 document.getElementById("proceedToGame").addEventListener("click", ()=>{
   document.getElementById("slideshow").style.display="none";
   document.getElementById("gameCard").style.display="block"; // show mini-game
@@ -301,8 +329,6 @@ const valentineCard=document.getElementById("valentineCard");
 const thankCard=document.getElementById("thankCard");
 const counterEl=document.getElementById("counter");
 const heartSound = document.getElementById("heartSound");
-const yesSound = document.getElementById("yesSound");
-const noSound = document.getElementById("noSound");
 
 let heartsCollected=0;
 const totalHearts=20;
@@ -354,6 +380,7 @@ function spawnHeart(){
 }
 for(let i=0;i<totalHearts;i++) spawnHeart();
 
+// Envelope and mini-game YES/NO logic unchanged
 const envelope = document.getElementById("envelope");
 envelope.addEventListener("click",()=> {
   if(!envelope.classList.contains("locked")){
@@ -365,55 +392,52 @@ envelope.addEventListener("click",()=> {
   }
 });
 
-const yesBtn=document.getElementById("yesBtn");
-if(yesBtn){
-  yesBtn.classList.add("magical");
-  yesBtn.addEventListener("click",()=> {
-    yesBtn.style.transform="scale(1.3)";
-    yesSound.currentTime=0; yesSound.play();
-    setTimeout(()=>yesBtn.style.transform="scale(1)",300);
-    valentineCard.style.display="none";
-    thankCard.style.display="block";
-  });
-}
+const yesBtnMini = document.getElementById("yesBtnMini");
+const noBtnMini = document.getElementById("noBtnMini");
 
-const noBtn=document.getElementById("noBtn");
-if(noBtn){
-  const cat=document.createElement("span");
-  cat.textContent="🐱";
-  cat.style.position="absolute";
-  cat.style.fontSize="36px";
-  cat.style.top="-38px";
-  cat.style.left="50%";
-  cat.style.transform="translateX(-50%)";
-  noBtn.style.position="absolute";
-  noBtn.appendChild(cat);
+yesBtnMini.classList.add("magical");
+yesBtnMini.addEventListener("click",()=> {
+  yesBtnMini.style.transform="scale(1.3)";
+  yesSound.currentTime=0; yesSound.play();
+  setTimeout(()=>yesBtnMini.style.transform="scale(1)",300);
+  valentineCard.style.display="none";
+  thankCard.style.display="block";
+});
 
-  let direction=1;
-  setInterval(()=>{
-    const top=parseFloat(cat.style.top.replace("px",""));
-    if(top>-25||top<-45) direction*=-1;
-    cat.style.top=(top+direction*2)+"px";
-  },100);
+const catMini = document.createElement("span");
+catMini.textContent="🐱";
+catMini.style.position="absolute";
+catMini.style.fontSize="36px";
+catMini.style.top="-38px";
+catMini.style.left="50%";
+catMini.style.transform="translateX(-50%)";
+noBtnMini.style.position="absolute";
+noBtnMini.appendChild(catMini);
 
-  document.addEventListener("mousemove",(e)=>{
-    if(valentineCard.style.display==="block"){
-      const rect=noBtn.getBoundingClientRect();
-      const dx=(rect.left + rect.width/2) - e.clientX;
-      const dy=(rect.top + rect.height/2) - e.clientY;
-      const distance=Math.sqrt(dx*dx+dy*dy);
-      if(distance<250){
-        const maxX=valentineCard.offsetWidth-rect.width;
-        const maxY=valentineCard.offsetHeight-rect.height-40;
-        let newX=Math.random()*maxX;
-        let newY=Math.random()*maxY+40;
-        noBtn.style.left = newX + 'px';
-        noBtn.style.top = newY + 'px';
-        noSound.currentTime=0; noSound.play();
-      }
+let directionMini=1;
+setInterval(()=>{
+  const top=parseFloat(catMini.style.top.replace("px",""));
+  if(top>-25||top<-45) directionMini*=-1;
+  catMini.style.top=(top+directionMini*2)+"px";
+},100);
+
+document.addEventListener("mousemove",(e)=>{
+  if(valentineCard.style.display==="block"){
+    const rect=noBtnMini.getBoundingClientRect();
+    const dx=(rect.left + rect.width/2) - e.clientX;
+    const dy=(rect.top + rect.height/2) - e.clientY;
+    const distance=Math.sqrt(dx*dx+dy*dy);
+    if(distance<250){
+      const maxX=valentineCard.offsetWidth-rect.width;
+      const maxY=valentineCard.offsetHeight-rect.height-40;
+      let newX=Math.random()*maxX;
+      let newY=Math.random()*maxY+40;
+      noBtnMini.style.left = newX + 'px';
+      noBtnMini.style.top = newY + 'px';
+      noSound.currentTime=0; noSound.play();
     }
-  });
-}
+  }
+});
 </script>
 </body>
 </html>
