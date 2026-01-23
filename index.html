@@ -124,22 +124,68 @@ body {
 .card:hover {
   box-shadow:0 15px 35px rgba(0,0,0,0.3);
 }
+
+/* Slideshow styles */
+#slideshow {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  background:linear-gradient(135deg, #ffdee9, #b5fffc, #fddde6);
+  display:flex; justify-content:center; align-items:center;
+  text-align:center; font-size:2rem; color:#800040;
+  z-index:10;
+  flex-direction:column;
+}
+
+.slide { display:none; opacity:0; transition: opacity 0.6s ease; }
+.slide.active { display:block; opacity:1; }
+
+#slideshow button {
+  padding:12px 30px; border:none; border-radius:18px;
+  background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white;
+  font-size:1.2rem; cursor:pointer;
+  margin-top:20px;
+}
+
+.slide .button-container { display:flex; justify-content:center; gap:20px; margin-top:20px; }
 </style>
 </head>
 <body>
 
+<!-- Slideshow -->
+<div id="slideshow">
+  <div class="slide active" id="slide1">
+    <p>Hello, lovely lady 💕<br>Click the screen to proceed</p>
+  </div>
+  <div class="slide" id="slide2">
+    <p>You probably know that Valentine’s Day is just around the corner 💝<br>Click the screen to proceed</p>
+  </div>
+  <div class="slide" id="slide3">
+    <p>Are you available for that day?</p>
+    <div class="button-container">
+      <button id="yesAvailability">YES</button>
+      <button id="noAvailability">NO</button>
+    </div>
+  </div>
+  <div class="slide" id="slide4">
+    <p>Great! As you’re free that day, please jump into the mini-game 💖</p>
+    <button id="proceedToGame">Proceed to Mini-Game</button>
+  </div>
+</div>
+
 <div id="floating"></div>
 
-<div class="card" id="gameCard">
+<!-- Mini-game -->
+<div class="card" id="gameCard" style="display:none;">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
+<!-- Envelope -->
 <div class="card" id="envelopeCard" style="display:none;">
   <div id="envelope" class="locked">💌</div>
   <p>Click to open your Valentine!</p>
 </div>
 
+<!-- Valentine message -->
 <div class="card" id="valentineCard" style="display:none;">
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>-Josh Daz</p>
@@ -149,6 +195,7 @@ body {
   </div>
 </div>
 
+<!-- Thank you card -->
 <div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! 🎀</h1>
   <p>I promise you won’t regret it. 💖</p>
@@ -156,28 +203,23 @@ body {
 
 <!-- Audio -->
 <audio id="bgMusic" loop>
-  <source src="mata-sa-mata.mp3" type="audio/mpeg">
+  <source src="./mata-sa-mata.mp3" type="audio/mpeg">
 </audio>
 <audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
-// ✅ NEW BACKGROUND MUSIC SYSTEM
+// Background music system
 const bgm = document.getElementById("bgMusic");
 bgm.volume = 0.4;
-
-bgm.addEventListener("loadedmetadata", () => {
-  bgm.currentTime = 12;
-});
-
+bgm.addEventListener("loadedmetadata", () => { bgm.currentTime = 12; });
 function startMusic() {
   bgm.play().catch(()=>{});
   document.removeEventListener("click", startMusic);
   document.removeEventListener("touchstart", startMusic);
   document.removeEventListener("keydown", startMusic);
 }
-
 window.addEventListener("load", () => {
   bgm.play().catch(() => {
     document.addEventListener("click", startMusic);
@@ -186,7 +228,44 @@ window.addEventListener("load", () => {
   });
 });
 
-// Floating emojis
+// Slideshow logic
+const slides = document.querySelectorAll("#slideshow .slide");
+let currentSlide = 0;
+
+function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
+
+// Slide 1 & 2: click anywhere to proceed
+document.getElementById("slide1").addEventListener("click",()=> { currentSlide++; showSlide(currentSlide); });
+document.getElementById("slide2").addEventListener("click",()=> { currentSlide++; showSlide(currentSlide); });
+
+// Slide 3 – YES/NO buttons
+const yesAvailability = document.getElementById("yesAvailability");
+const noAvailability = document.getElementById("noAvailability");
+
+yesAvailability.addEventListener("click", () => { currentSlide++; showSlide(currentSlide); });
+
+// NO button dodges
+noAvailability.addEventListener("mousemove", (e)=>{
+  const rect = noAvailability.getBoundingClientRect();
+  const dx = rect.left + rect.width/2 - e.clientX;
+  const dy = rect.top + rect.height/2 - e.clientY;
+  const distance = Math.sqrt(dx*dx + dy*dy);
+  if(distance < 150){
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+    noAvailability.style.position = "absolute";
+    noAvailability.style.left = Math.random()*maxX + "px";
+    noAvailability.style.top = Math.random()*maxY + "px";
+  }
+});
+
+// Slide 4 – proceed to mini-game
+document.getElementById("proceedToGame").addEventListener("click", ()=>{
+  document.getElementById("slideshow").style.display="none";
+  document.getElementById("gameCard").style.display="block"; // show mini-game
+});
+
+// Floating emojis (unchanged)
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
 const totalFloating = 50;
@@ -215,7 +294,7 @@ for(let i=0;i<totalFloating;i++){
   drift();
 }
 
-// Mini-game (unchanged)
+// Mini-game logic unchanged
 const gameCard=document.getElementById("gameCard");
 const envelopeCard=document.getElementById("envelopeCard");
 const valentineCard=document.getElementById("valentineCard");
@@ -254,6 +333,7 @@ function spawnHeart(){
     heart.removeEventListener("click", popHeart);
     heart.style.animation = "heartPop 0.4s forwards";
     heartSound.currentTime=0; heartSound.play();
+    bgm.play().catch(()=>{}); // start music on first click
 
     setTimeout(() => {
       heartsCollected++;
