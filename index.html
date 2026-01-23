@@ -72,14 +72,6 @@ body {
   top:10px;
 }
 
-/* Glitch Animation */
-@keyframes glitch {
-  0% { text-shadow: 2px 0 #ff0000; transform: translate(0); }
-  20% { text-shadow: -2px 0 #00ffff; transform: translate(-2px, 1px); }
-  100% { text-shadow: 0; transform: translate(0); }
-}
-.glitch-active { animation: glitch 0.2s linear; background: #ff4d94 !important; }
-
 /* YES button animations */
 @keyframes yesFloat {
   0% { transform: translateY(0px); }
@@ -90,15 +82,6 @@ body {
   0% { box-shadow:0 0 10px #ff8ec7; }
   50% { box-shadow:0 0 20px #b57fff; }
   100% { box-shadow:0 0 10px #ff8ec7; }
-}
-
-/* Proceed button animation */
-@keyframes proceedAnim {
-  0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.1) rotate(5deg); }
-  50% { transform: scale(1) rotate(-5deg); }
-  75% { transform: scale(1.1) rotate(3deg); }
-  100% { transform: scale(1) rotate(0deg); }
 }
 
 /* Heart collectibles */
@@ -114,7 +97,6 @@ body {
   display:flex;
   align-items:center;
   justify-content:center;
-  opacity: 1 !important; 
 }
 
 /* Heart pop animation */
@@ -131,14 +113,25 @@ body {
   transition: transform 0.5s ease;
 }
 #envelope.locked { filter: grayscale(80%); }
+@keyframes envelopeOpen {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.2) rotate(15deg); }
+  60% { transform: scale(1.1) rotate(-10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
 
 /* Floating emojis */
 .floating-emoji {
   position:absolute;
   pointer-events:none;
   font-size:40px;
-  opacity:0.9;
+  opacity:0.8;
   z-index:1;
+}
+
+/* Cards glow */
+.card:hover {
+  box-shadow:0 15px 35px rgba(0,0,0,0.3);
 }
 
 /* Slideshow */
@@ -155,61 +148,49 @@ body {
 .slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
 
 .slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
-#proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; animation: proceedAnim 1.2s ease-in-out infinite; }
+#proceedToGame { margin-top:20px; font-size:1rem; padding:10px 20px; border-radius:15px; cursor:pointer; background:linear-gradient(45deg,#ff8ec7,#b57fff); color:white; border:none; }
 </style>
 </head>
 <body>
 
+<!-- Slideshow -->
 <div id="slideshow">
-  <div class="slide active" id="slide1"><p>Hello, Lovely Lady 😍</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide2"><p>Before you continue…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide3"><p>Take a deep breath.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide4"><p>Because what you’re about to read…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide5"><p>…is very important.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide6"><p>Like… extremely important.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide7"><p>Like… history-changing levels of important.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide8"><p>Okay maybe not history…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide9"><p>But definitely MY history.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide10"><p>You look really nice today, by the way.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide11"><p>Anyway…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide12"><p>You know what’s coming soon, right?</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide13"><p>The day couples pretend they aren’t broke.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide14"><p>The day flowers suddenly cost triple.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide15"><p>The day hearts are everywhere…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide16"><p>Yes, you are right!.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide17"><p>Valentine’s Day.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide18"><p>And of course…</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide19"><p>I can’t let that day pass like it’s normal.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide20"><p>Especially when I have someone as special as you.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide21"><p>A regular question just wouldn’t feel right.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide22"><p>Because you deserve something more thoughtful.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide23"><p>So no… this isn’t a challenge.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide24"><p>You don’t have to earn anything.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide25"><p>You already mean the world to me.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide26"><p>This mini-game… is just my cute way of asking someone very important to me to spend Valentine’s Day with me.</p><div class="slide-footer">Click here…</div></div>
-  <div class="slide" id="slide27"><p>So, are you available that day? 😊</p>
+  <div class="slide active" id="slide1">
+    <p>Hello, lovely lady 💕</p>
+    <div class="slide-footer">Click here…</div>
+  </div>
+  <div class="slide" id="slide2">
+    <p>You probably know that Valentine’s Day is just around the corner 💝</p>
+    <div class="slide-footer">Click here…</div>
+  </div>
+  <div class="slide" id="slide3">
+    <p>Are you available for that day?</p>
     <div class="button-container">
       <button id="yesBtn">YES! 💖</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-  <div class="slide" id="slide28"><p>Great! As you’re free that day, please jump into the mini-game 💖</p>
+  <div class="slide" id="slide4">
+    <p>Great! As you’re free that day, please jump into the mini-game 💖</p>
     <button id="proceedToGame">Proceed to Mini-Game</button>
   </div>
 </div>
 
 <div id="floating"></div>
 
+<!-- Mini-game -->
 <div class="card" id="gameCard" style="display:none;">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
 
+<!-- Envelope -->
 <div class="card" id="envelopeCard" style="display:none;">
   <div id="envelope" class="locked">💌</div>
   <p>Click to open your Valentine!</p>
 </div>
 
+<!-- Valentine message -->
 <div class="card" id="valentineCard" style="display:none;">
   <h1>💕 Camille Anndrea Julgan Lebico, will you be my Valentine? :3</h1>
   <p>-Josh Daz</p>
@@ -219,108 +200,129 @@ body {
   </div>
 </div>
 
+<!-- Thank you card -->
 <div class="card" id="thankCard" style="display:none;">
   <h1>Thank you so much! </h1>
+  <p>I promise you won’t regret it. 💖</p>
 </div>
 
+<!-- Audio -->
 <audio id="bgMusic" src="./mata-sa-mata.mp3" loop></audio>
 <audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
+// Background music: play first click, start at 00:12, loop forever
 const bgm = document.getElementById("bgMusic");
 bgm.volume = 0.4;
 let musicStarted = false;
 function startMusicOnce() {
-  if(!musicStarted){
-    bgm.currentTime = 12;
-    bgm.play().catch(()=>{});
-    musicStarted = true;
-  }
+    if(!musicStarted){
+        bgm.currentTime = 12;
+        bgm.play().catch(()=>{});
+        musicStarted = true;
+    }
 }
 
+// Slideshow logic
 const slides = document.querySelectorAll("#slideshow .slide");
 let currentSlide = 0;
-function showSlide(index){
-  slides.forEach(s=>s.classList.remove("active"));
-  slides[index].classList.add("active");
-}
+function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
 
-function handleSlideClick(){
-  startMusicOnce();
-  if(currentSlide < 26) {
+// Slide 1 & 2 click anywhere
+function handleSlideClick() {
+    startMusicOnce();
     currentSlide++;
     showSlide(currentSlide);
-  }
 }
+slides[0].addEventListener("click", handleSlideClick);
+slides[0].addEventListener("touchstart", handleSlideClick, {passive:true});
+slides[1].addEventListener("click", handleSlideClick);
+slides[1].addEventListener("touchstart", handleSlideClick, {passive:true});
 
-for(let i=0;i<27;i++){
-  slides[i].addEventListener("click",handleSlideClick);
-}
-
-document.getElementById("yesBtn").onclick = () => {
-  currentSlide = 27;
+// Slide 3 YES/NO buttons (same as mini-game)
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+yesBtn.classList.add("magical");
+yesBtn.addEventListener("click",()=>{
+  currentSlide++;
   showSlide(currentSlide);
-};
+});
 
-function setupDodge(btn) {
-  const cat = document.createElement("span");
-  cat.textContent="🐱";
-  cat.style.position="absolute";
-  cat.style.fontSize="36px";
-  cat.style.top="-38px";
-  cat.style.left="50%";
-  cat.style.transform="translateX(-50%)";
-  btn.style.position="absolute";
-  btn.appendChild(cat);
-
-  document.addEventListener("mousemove",(e)=>{
-    const rect=btn.getBoundingClientRect();
-    if(rect.width > 0) {
-        const dx=(rect.left+rect.width/2)-e.clientX;
-        const dy=(rect.top+rect.height/2)-e.clientY;
-        const distance=Math.sqrt(dx*dx+dy*dy);
-        if(distance<200){
-          btn.style.left=Math.random()*(window.innerWidth-btn.offsetWidth)+'px';
-          btn.style.top=Math.random()*(window.innerHeight-btn.offsetHeight)+'px';
-          btn.classList.add("glitch-active");
-          document.getElementById("noSound").currentTime=0;
-          document.getElementById("noSound").play().catch(()=>{});
-          setTimeout(() => btn.classList.remove("glitch-active"), 200);
-        }
+// NO button with cat, never leaves screen
+const cat = document.createElement("span");
+cat.textContent="🐱";
+cat.style.position="absolute";
+cat.style.fontSize="36px";
+cat.style.top="-38px";
+cat.style.left="50%";
+cat.style.transform="translateX(-50%)";
+noBtn.style.position="absolute";
+noBtn.appendChild(cat);
+const btnWidth = noBtn.offsetWidth;
+const btnHeight = noBtn.offsetHeight;
+document.addEventListener("mousemove",(e)=>{
+  if(currentSlide===2){
+    const rect = noBtn.getBoundingClientRect();
+    const dx = (rect.left + rect.width/2) - e.clientX;
+    const dy = (rect.top + rect.height/2) - e.clientY;
+    const distance = Math.sqrt(dx*dx+dy*dy);
+    if(distance < 250){
+      const maxX = window.innerWidth - btnWidth;
+      const maxY = window.innerHeight - btnHeight;
+      let newX = Math.random() * maxX;
+      let newY = Math.random() * maxY;
+      noBtn.style.left = newX + 'px';
+      noBtn.style.top = newY + 'px';
     }
-  });
-}
+  }
+});
 
-setupDodge(document.getElementById("noBtn"));
-setupDodge(document.getElementById("noBtnMini"));
-
-document.getElementById("proceedToGame").addEventListener("click",()=>{
+// Slide 4 proceed button
+document.getElementById("proceedToGame").addEventListener("click", ()=>{
   document.getElementById("slideshow").style.display="none";
   document.getElementById("gameCard").style.display="block";
 });
 
-// FLOATING EMOJIS ( increased count to 100 )
+// Floating emojis
 const floating = document.getElementById("floating");
-const emojis=['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
-for(let i=0;i<100;i++){
+const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
+const totalFloating = 50;
+for(let i=0;i<totalFloating;i++){
   const e=document.createElement('div');
   e.className='floating-emoji';
   e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
   e.style.left=Math.random()*window.innerWidth+'px';
   e.style.bottom=Math.random()*window.innerHeight+'px';
+  e.style.fontSize=(Math.random()*30+30)+'px';
   floating.appendChild(e);
 
+  let sway=(Math.random()*6-3);
   let posY=parseFloat(e.style.bottom);
   function drift(){
-    posY += 1.5;
-    e.style.bottom = posY+'px';
-    if(posY>window.innerHeight+50) posY=-50;
+    posY += 2;
+    e.style.bottom = posY + 'px';
+    e.style.left = parseFloat(e.style.left) + sway;
+    sway += (Math.random()*0.4-0.2);
+    if(posY > window.innerHeight+50){
+      posY=-50;
+      e.style.left = Math.random()*window.innerWidth+'px';
+    }
     requestAnimationFrame(drift);
   }
   drift();
 }
+
+// Mini-game logic: collectible hearts
+const gameCard=document.getElementById("gameCard");
+const envelopeCard=document.getElementById("envelopeCard");
+const valentineCard=document.getElementById("valentineCard");
+const thankCard=document.getElementById("thankCard");
+const counterEl=document.getElementById("counter");
+const heartSound = document.getElementById("heartSound");
+const yesSound = document.getElementById("yesSound");
+const noSound = document.getElementById("noSound");
 
 let heartsCollected=0;
 const totalHearts=20;
@@ -330,48 +332,110 @@ function spawnHeart(){
   heart.className="heart";
   heart.textContent="💖";
   heart.style.left=Math.random()*(window.innerWidth-50)+"px";
-  heart.style.top=window.innerHeight + 50 + "px";
+  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
   document.body.appendChild(heart);
 
-  let posY=window.innerHeight + 50;
-  function driftHeart(){
-    posY -= 2.5;
+  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
+  function drift(){
+    posY -= 3;
     heart.style.top = posY + 'px';
-    if(posY<-100) posY=window.innerHeight+100; 
-    if(heart.parentElement) requestAnimationFrame(driftHeart);
+    heart.style.left = parseFloat(heart.style.left) + sway;
+    sway += (Math.random()*0.3-0.15);
+    if(posY < -50) {
+      posY = window.innerHeight + 50;
+      heart.style.left = Math.random()*(window.innerWidth-50)+"px";
+    }
+    requestAnimationFrame(drift);
   }
-  driftHeart();
+  drift();
 
-  heart.addEventListener("click", function(){
-    heart.style.animation="heartPop 0.4s forwards";
-    document.getElementById("heartSound").currentTime=0; 
-    document.getElementById("heartSound").play();
-    setTimeout(()=>{
+  heart.addEventListener("click", function popHeart() {
+    heart.removeEventListener("click", popHeart);
+    heart.style.animation = "heartPop 0.4s forwards";
+    heartSound.currentTime=0; heartSound.play();
+
+    setTimeout(() => {
       heartsCollected++;
-      document.getElementById("counter").textContent=`Hearts collected: ${heartsCollected} / ${totalHearts}`;
+      counterEl.textContent = `Hearts collected: ${heartsCollected} / ${totalHearts}`;
+      counterEl.style.transform = "scale(1.5)";
+      counterEl.style.transition = "transform 0.2s ease";
+      setTimeout(() => { counterEl.style.transform = "scale(1)"; }, 200);
+
       heart.remove();
-      if(heartsCollected>=totalHearts){
-        document.getElementById("envelopeCard").style.display="block";
-        document.getElementById("gameCard").style.display="none";
+
+      if(heartsCollected >= totalHearts){
+        envelopeCard.style.display="block";
+        gameCard.style.display="none";
         document.getElementById("envelope").classList.remove("locked");
       }
-    },400);
+    }, 400);
   });
 }
-for(let i=0;i<35;i++) spawnHeart(); // Extra hearts
+for(let i=0;i<totalHearts;i++) spawnHeart();
 
-document.getElementById("envelope").onclick = () => {
-    if(!document.getElementById("envelope").classList.contains("locked")){
-        document.getElementById("envelopeCard").style.display="none";
-        document.getElementById("valentineCard").style.display="block";
+// Envelope
+const envelope = document.getElementById("envelope");
+envelope.addEventListener("click",()=> {
+  if(!envelope.classList.contains("locked")){
+    envelope.style.animation="envelopeOpen 0.6s forwards";
+    setTimeout(()=> {
+      envelopeCard.style.display="none";
+      valentineCard.style.display="block";
+    },600);
+  }
+});
+
+// YES button magical in mini-game
+const yesBtnMini=document.getElementById("yesBtnMini");
+if(yesBtnMini){
+  yesBtnMini.classList.add("magical");
+  yesBtnMini.addEventListener("click",()=> {
+    yesBtnMini.style.transform="scale(1.3)";
+    yesSound.currentTime=0; yesSound.play();
+    setTimeout(()=>yesBtnMini.style.transform="scale(1)",300);
+    valentineCard.style.display="none";
+    thankCard.style.display="block";
+  });
+}
+
+// NO button with cat in mini-game
+const noBtnMini=document.getElementById("noBtnMini");
+if(noBtnMini){
+  const cat=document.createElement("span");
+  cat.textContent="🐱";
+  cat.style.position="absolute";
+  cat.style.fontSize="36px";
+  cat.style.top="-38px";
+  cat.style.left="50%";
+  cat.style.transform="translateX(-50%)";
+  noBtnMini.style.position="absolute";
+  noBtnMini.appendChild(cat);
+
+  let direction=1;
+  setInterval(()=>{
+    const top=parseFloat(cat.style.top.replace("px",""));
+    if(top>-25||top<-45) direction*=-1;
+    cat.style.top=(top+direction*2)+"px";
+  },100);
+
+  document.addEventListener("mousemove",(e)=>{
+    if(valentineCard.style.display==="block"){
+      const rect=noBtnMini.getBoundingClientRect();
+      const dx=(rect.left + rect.width/2) - e.clientX;
+      const dy=(rect.top + rect.height/2) - e.clientY;
+      const distance=Math.sqrt(dx*dx+dy*dy);
+      if(distance<250){
+        const maxX=valentineCard.offsetWidth-rect.width;
+        const maxY=valentineCard.offsetHeight-rect.height-40;
+        let newX=Math.random()*maxX;
+        let newY=Math.random()*maxY+40;
+        noBtnMini.style.left = newX + 'px';
+        noBtnMini.style.top = newY + 'px';
+        noSound.currentTime=0; noSound.play();
+      }
     }
-};
-
-document.getElementById("yesBtnMini").onclick = () => {
-  document.getElementById("yesSound").play();
-  document.getElementById("valentineCard").style.display="none";
-  document.getElementById("thankCard").style.display="block";
-};
+  });
+}
 </script>
 </body>
 </html>
