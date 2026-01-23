@@ -29,6 +29,7 @@ body {
 .card h1 { font-size:1.6rem; margin-bottom:10px; }
 .card p { font-size:1.2rem; margin-bottom:20px; }
 
+/* Button container */
 .button-container {
   position:relative;
   width:100%;
@@ -132,70 +133,14 @@ body {
 .card:hover {
   box-shadow:0 15px 35px rgba(0,0,0,0.3);
 }
-
-/* Slideshow styles */
-#slideshow {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  background:linear-gradient(135deg, #ffdee9, #b5fffc, #fddde6);
-  display:flex; justify-content:center; align-items:center;
-  text-align:center; font-size:2rem; color:#800040;
-  z-index:10;
-  flex-direction:column;
-}
-
-.slide { display:none; opacity:0; transition: opacity 0.6s ease; }
-.slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
-
-.slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
-
-/* Proceed button animation */
-#proceedToGame {
-  padding:15px 35px;
-  font-size:1.2rem;
-  border-radius:20px;
-  border:none;
-  cursor:pointer;
-  background: linear-gradient(45deg,#ff8ec7,#b57fff);
-  color:white;
-  box-shadow:0 5px 15px rgba(0,0,0,0.3);
-  animation: bounceGlow 1.2s infinite alternate;
-}
-@keyframes bounceGlow {
-  0% { transform: translateY(0); box-shadow:0 5px 15px rgba(0,0,0,0.3); }
-  50% { transform: translateY(-10px); box-shadow:0 10px 25px rgba(181,127,255,0.7); }
-  100% { transform: translateY(0); box-shadow:0 5px 15px rgba(0,0,0,0.3); }
-}
 </style>
 </head>
 <body>
 
-<!-- Slideshow -->
-<div id="slideshow">
-  <div class="slide active" id="slide1">
-    <p>Hello, lovely lady 💕</p>
-    <div class="slide-footer">Click anywhere…</div>
-  </div>
-  <div class="slide" id="slide2">
-    <p>You probably know that Valentine’s Day is just around the corner 💝</p>
-    <div class="slide-footer">Click anywhere…</div>
-  </div>
-  <div class="slide" id="slide3">
-    <p>Are you available for that day?</p>
-    <div class="button-container">
-      <button id="yesBtn">YES! 💖</button>
-      <button id="noBtn">NO 🙃</button>
-    </div>
-  </div>
-  <div class="slide" id="slide4">
-    <p>Great! As you’re free that day, please jump into the mini-game 💖</p>
-    <button id="proceedToGame">Proceed to Mini-Game</button>
-  </div>
-</div>
-
 <div id="floating"></div>
 
 <!-- Mini-game -->
-<div class="card" id="gameCard" style="display:none;">
+<div class="card" id="gameCard">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
 </div>
@@ -223,88 +168,13 @@ body {
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" loop>
-  <source src="./mata-sa-mata.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" src="./mata-sa-mata.mp3" loop></audio>
 <audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
 <audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
 
 <script>
-// Background music system
-const bgm = document.getElementById("bgMusic");
-bgm.volume = 0.4;
-bgm.addEventListener("loadedmetadata", () => { bgm.currentTime = 12; });
-let musicStarted = false;
-function startMusicOnce() {
-  if(!musicStarted){
-    bgm.play().catch(()=>{});
-    musicStarted = true;
-  }
-}
-
-// Slideshow logic
-const slides = document.querySelectorAll("#slideshow .slide");
-let currentSlide = 0;
-function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
-
-// Slide 1 & 2 click/touch anywhere
-slides[0].addEventListener("click", ()=>{ startMusicOnce(); currentSlide++; showSlide(currentSlide); });
-slides[0].addEventListener("touchstart", ()=>{ startMusicOnce(); currentSlide++; showSlide(currentSlide); }, {passive:true});
-slides[1].addEventListener("click", ()=>{ currentSlide++; showSlide(currentSlide); });
-slides[1].addEventListener("touchstart", ()=>{ currentSlide++; showSlide(currentSlide); }, {passive:true});
-
-// Slide 3 YES/NO buttons (same mini-game buttons)
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const noSound = document.getElementById("noSound");
-const yesSound = document.getElementById("yesSound");
-
-yesBtn.classList.add("magical");
-yesBtn.addEventListener("click",()=>{
-  yesBtn.style.transform="scale(1.3)";
-  yesSound.currentTime=0; yesSound.play();
-  setTimeout(()=>yesBtn.style.transform="scale(1)",300);
-  currentSlide++; showSlide(currentSlide);
-});
-
-// NO button dodging constrained within viewport
-const cat = document.createElement("span");
-cat.textContent="🐱";
-cat.style.position="absolute";
-cat.style.fontSize="36px";
-cat.style.top="-38px";
-cat.style.left="50%";
-cat.style.transform="translateX(-50%)";
-noBtn.style.position="absolute";
-noBtn.appendChild(cat);
-
-document.addEventListener("mousemove",(e)=>{
-  if(currentSlide===2){
-    const rect=noBtn.getBoundingClientRect();
-    const dx=(rect.left + rect.width/2) - e.clientX;
-    const dy=(rect.top + rect.height/2) - e.clientY;
-    const distance=Math.sqrt(dx*dx+dy*dy);
-    if(distance<250){
-      // Ensure button stays fully on screen
-      const maxX = window.innerWidth - rect.width;
-      const maxY = window.innerHeight - rect.height;
-      let newX = Math.min(Math.max(Math.random() * window.innerWidth, 0), maxX);
-      let newY = Math.min(Math.max(Math.random() * window.innerHeight, 0), maxY);
-      noBtn.style.left = newX + 'px';
-      noBtn.style.top = newY + 'px';
-      noSound.currentTime=0; noSound.play();
-    }
-  }
-});
-
-// Slide 4 proceed button animation
-document.getElementById("proceedToGame").addEventListener("click", ()=>{
-  document.getElementById("slideshow").style.display="none";
-  document.getElementById("gameCard").style.display="block";
-});
-
-// Floating emojis (unchanged)
+// Floating emojis
 const floating = document.getElementById("floating");
 const emojis = ['💖','✨','🌸','💌','🐱','🎀','🍬','🌈','😻','🎶','🍭','🦄','🥰','💝'];
 const totalFloating = 50;
@@ -333,8 +203,125 @@ for(let i=0;i<totalFloating;i++){
   drift();
 }
 
-// Mini-game logic unchanged...
-// (hearts, envelope, valentine card, thank card)
+// Mini-game logic
+const gameCard=document.getElementById("gameCard");
+const envelopeCard=document.getElementById("envelopeCard");
+const valentineCard=document.getElementById("valentineCard");
+const thankCard=document.getElementById("thankCard");
+const counterEl=document.getElementById("counter");
+const heartSound = document.getElementById("heartSound");
+const yesSound = document.getElementById("yesSound");
+const noSound = document.getElementById("noSound");
+
+let heartsCollected=0;
+const totalHearts=20;
+
+function spawnHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.textContent="💖";
+  heart.style.left=Math.random()*(window.innerWidth-50)+"px";
+  heart.style.top=Math.random()*(window.innerHeight-50)+"px";
+  document.body.appendChild(heart);
+
+  let sway=(Math.random()*3-1.5), posY=parseFloat(heart.style.top);
+  function drift(){
+    posY -= 3;
+    heart.style.top = posY + 'px';
+    heart.style.left = parseFloat(heart.style.left) + sway;
+    sway += (Math.random()*0.3-0.15);
+    if(posY < -50) {
+      posY = window.innerHeight + 50;
+      heart.style.left = Math.random()*(window.innerWidth-50)+"px";
+    }
+    requestAnimationFrame(drift);
+  }
+  drift();
+
+  heart.addEventListener("click", function popHeart() {
+    heart.removeEventListener("click", popHeart);
+    heart.style.animation = "heartPop 0.4s forwards";
+    heartSound.currentTime=0; heartSound.play();
+
+    setTimeout(() => {
+      heartsCollected++;
+      counterEl.textContent = `Hearts collected: ${heartsCollected} / ${totalHearts}`;
+      counterEl.style.transform = "scale(1.5)";
+      counterEl.style.transition = "transform 0.2s ease";
+      setTimeout(() => { counterEl.style.transform = "scale(1)"; }, 200);
+
+      heart.remove();
+
+      if(heartsCollected >= totalHearts){
+        envelopeCard.style.display="block";
+        gameCard.style.display="none";
+        document.getElementById("envelope").classList.remove("locked");
+      }
+    }, 400);
+  });
+}
+for(let i=0;i<totalHearts;i++) spawnHeart();
+
+// Envelope
+const envelope = document.getElementById("envelope");
+envelope.addEventListener("click",()=> {
+  if(!envelope.classList.contains("locked")){
+    envelope.style.animation="envelopeOpen 0.6s forwards";
+    setTimeout(()=> {
+      envelopeCard.style.display="none";
+      valentineCard.style.display="block";
+    },600);
+  }
+});
+
+// YES button magical
+const yesBtn=document.getElementById("yesBtn");
+if(yesBtn){
+  yesBtn.classList.add("magical");
+  yesBtn.addEventListener("click",()=> {
+    yesBtn.style.transform="scale(1.3)";
+    yesSound.currentTime=0; yesSound.play();
+    setTimeout(()=>yesBtn.style.transform="scale(1)",300);
+    valentineCard.style.display="none";
+    thankCard.style.display="block";
+  });
+}
+
+// NO button with cat fully constrained
+const noBtn=document.getElementById("noBtn");
+if(noBtn){
+  const cat=document.createElement("span");
+  cat.textContent="🐱";
+  cat.style.position="absolute";
+  cat.style.fontSize="36px";
+  cat.style.top="-38px";
+  cat.style.left="50%";
+  cat.style.transform="translateX(-50%)";
+  noBtn.style.position="absolute";
+  noBtn.appendChild(cat);
+
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+
+  document.addEventListener("mousemove",(e)=>{
+    if(valentineCard.style.display==="block"){
+      const rect=noBtn.getBoundingClientRect();
+      const dx=(rect.left + rect.width/2) - e.clientX;
+      const dy=(rect.top + rect.height/2) - e.clientY;
+      const distance=Math.sqrt(dx*dx+dy*dy);
+      if(distance<250){
+        // Keep button fully in viewport
+        const maxX = window.innerWidth - btnWidth;
+        const maxY = window.innerHeight - btnHeight;
+        let newX = Math.random() * maxX;
+        let newY = Math.random() * maxY;
+        noBtn.style.left = newX + 'px';
+        noBtn.style.top = newY + 'px';
+        noSound.currentTime=0; noSound.play();
+      }
+    }
+  });
+}
 </script>
 </body>
 </html>
