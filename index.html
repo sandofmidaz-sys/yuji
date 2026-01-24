@@ -138,7 +138,18 @@ body {
 }
 .slide { display:none; opacity:0; transition: opacity 0.6s ease; }
 .slide.active { display:flex; opacity:1; flex-direction:column; justify-content:center; align-items:center; }
-.slide-footer { font-size:0.8rem; margin-top:20px; opacity:0.7; }
+
+/* ✅ EDIT 1 — Bouncing Click here */
+.slide-footer {
+  font-size:0.8rem;
+  margin-top:20px;
+  opacity:0.7;
+  animation: bounceHint 1.2s infinite;
+}
+@keyframes bounceHint {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
 
 #proceedToGame {
   margin-top:20px;
@@ -157,7 +168,6 @@ body {
 
 <!-- Slideshow -->
 <div id="slideshow">
-  <!-- Slides 1–17 & 19–25 -->
   <div class="slide active"><p>Hello, Lovely Lady 😍</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Before you continue…</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Take a deep breath.</p><div class="slide-footer">Click here…</div></div>
@@ -176,7 +186,6 @@ body {
   <div class="slide"><p>Yes, you are right!</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Valentine’s Day.</p><div class="slide-footer">Click here…</div></div>
 
-  <!-- Slide 18 -->
   <div class="slide">
     <p>Are you available that day?</p>
     <div class="button-container">
@@ -185,7 +194,6 @@ body {
     </div>
   </div>
 
-  <!-- Slides 19–25 -->
   <div class="slide"><p>I can’t let that day pass like it’s normal.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>Especially when I have someone as special as you.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>A regular question just wouldn’t feel right.</p><div class="slide-footer">Click here…</div></div>
@@ -194,7 +202,6 @@ body {
   <div class="slide"><p>You don’t have to earn anything.</p><div class="slide-footer">Click here…</div></div>
   <div class="slide"><p>You already mean the world to me.</p><div class="slide-footer">Click here…</div></div>
 
-  <!-- Slide 26 -->
   <div class="slide">
     <p>This mini-game is just my way of asking someone very important to me to spend Valentine’s Day with me.</p>
     <button id="proceedToGame">Proceed to Mini-Game 💖</button>
@@ -203,7 +210,6 @@ body {
 
 <div id="floating"></div>
 
-<!-- Mini-game -->
 <div class="card" id="gameCard" style="display:none;">
   <h1>Collect 20 hearts to unlock your envelope!</h1>
   <div id="counter">Hearts collected: 0 / 20</div>
@@ -228,12 +234,16 @@ body {
   <p>I promise you won’t regret it. 💖</p>
 </div>
 
+<!-- ✅ EDIT 2 — Sound replacements -->
 <audio id="bgMusic" src="./mata-sa-mata.mp3" loop></audio>
-<audio id="heartSound" src="https://orangefreesounds.com/wp-content/uploads/2014/09/Pop-sound-effect.mp3" preload="auto"></audio>
-<audio id="yesSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
-<audio id="noSound" src="https://orangefreesounds.com/wp-content/uploads/2021/04/Angry-cat-sound-effect.mp3" preload="auto"></audio>
+<audio id="heartSound" src="pop.mp3" preload="auto"></audio>
+<audio id="yesSound" src="yes.mp3" preload="auto"></audio>
+<audio id="noSound" src="hiss.mp3" preload="auto"></audio>
+<audio id="slideSound" src="slide.mp3" preload="auto"></audio>
 
 <script>
+const slideSound = document.getElementById("slideSound");
+
 // Background music
 const bgm = document.getElementById("bgMusic");
 bgm.volume = 0.4;
@@ -251,16 +261,19 @@ const slides = document.querySelectorAll("#slideshow .slide");
 let currentSlide = 0;
 function showSlide(index){ slides.forEach(s => s.classList.remove("active")); slides[index].classList.add("active"); }
 
-// Slides 1–17 & 19–25 click to proceed
 slides.forEach((slide, i)=>{
     if(i!==17 && i!==25){
         slide.addEventListener("click", ()=>{
             startMusicOnce();
+            slideSound.currentTime=0;
+            slideSound.play();
             currentSlide++;
             showSlide(currentSlide);
         });
         slide.addEventListener("touchstart", ()=>{
             startMusicOnce();
+            slideSound.currentTime=0;
+            slideSound.play();
             currentSlide++;
             showSlide(currentSlide);
         }, {passive:true});
@@ -424,7 +437,7 @@ if(yesBtnMini){
   });
 }
 
-// NO button mini-game: restore cat + dodging
+// NO button mini-game
 const noBtnMini=document.getElementById("noBtnMini");
 if(noBtnMini){
   const cat=document.createElement("span");
